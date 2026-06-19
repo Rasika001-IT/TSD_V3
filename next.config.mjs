@@ -5,7 +5,7 @@ const nextConfig = {
     // Featured/inline images are served from the R2 CDN domain after migration.
     // WordPress host is kept ONLY as a transitional fallback during cutover; remove post-cutover.
     remotePatterns: [
-      { protocol: 'https', hostname: 'media.tsdmagazine.com' },
+      { protocol: 'https', hostname: 'media.thesuccessdigest.org' },
       { protocol: 'https', hostname: 'thesuccessdigest.com' },
     ],
   },

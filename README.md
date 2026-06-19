@@ -1,11 +1,16 @@
 # TSD_V3
 
 Consolidated **Next.js** app (public magazine site + `/admin` editorial CMS + API) that replaces
-the WordPress dependency of `tsdmagazine.com`. Backed by **Supabase** (Postgres + Auth) and
-**Cloudflare R2** (media/PDF CDN). Deployed on **Railway**.
+the WordPress dependency behind the live magazine site. Backed by **Supabase** (Postgres + Auth)
+and **Cloudflare R2** (media/PDF CDN). Deployed on **Railway**.
+
+> **Primary domain: `thesuccessdigest.org`** (new). The currently-live `tsdmagazine.com` stays up
+> and untouched on the old stack — TSD_V3 launches on the fresh `.org` domain to avoid disrupting
+> the live site's nameservers. After launch, `tsdmagazine.com` can be 301-redirected to the new
+> domain (or kept) as a separate decision.
 
 > Replaces the two old repos `TSD---V2` (Express backend) and `TSD-Frontend` (Vite SPA), which
-> stay live and untouched until the Phase-4 DNS cutover, then are archived as the rollback net.
+> stay live and untouched until launch, then are archived as the rollback net.
 
 Full plan: `C:\Users\kolhe\.claude\plans\quirky-seeking-sky.md`
 
@@ -31,14 +36,15 @@ the final delta sync at cutover.
 
 ## Build phases
 - **0 — Provision + schema** (this scaffold). ✅ schema, project skeleton, migration engine.
-- **1 — Migrate** content + media (needs Supabase + R2 credentials + `media.tsdmagazine.com` DNS).
+- **1 — Migrate** content + media (needs Supabase + R2 credentials + `media.thesuccessdigest.org` DNS).
 - **2 — Public site**: port `TSD-Frontend` pages to App Router, reading Supabase (design identical).
 - **3 — CMS** in tiers: 3a news/blog editor (blocks cutover) → 3b rankings/reports/series →
   3c hub pages + social cascade + newsletter automation.
-- **4 — Cutover**: deploy on Railway, final delta sync, flip `tsdmagazine.com` DNS, keep old
-  service as rollback, then rotate exposed secrets and archive old repos.
+- **4 — Launch**: deploy on Railway, final delta sync, point `thesuccessdigest.org` at the new
+  service (old `tsdmagazine.com` site stays live as rollback), then rotate exposed secrets and
+  archive old repos. Optionally 301 `tsdmagazine.com` → `thesuccessdigest.org`.
 
 ## What I need from the account owner (blocks Phase 1)
-- **Cloudflare:** R2 bucket + custom domain `media.tsdmagazine.com` + scoped API token.
+- **Cloudflare:** R2 bucket + custom domain `media.thesuccessdigest.org` + scoped API token.
 - **Supabase:** project URL + anon key + service-role key.
 - **Railway:** a new service connected to this repo (env vars from `.env.example`).
