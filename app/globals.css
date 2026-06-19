@@ -1,0 +1,11 @@
+/* Ported from TSD-Frontend/src/index.css — same base styling for an identical look.
+   NOTE (Phase 2): copy the @font-face declarations from
+   TSD-Frontend/src/styles/fonts.css (Canela + Inter) and the /fonts assets here. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-body bg-[#FCF9F4] text-[#1D1F26];
+}
