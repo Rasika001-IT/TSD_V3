@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../ui/SmartImage";
 import Link from "next/link";
 
 const SmallArticleCard = ({
@@ -34,7 +35,7 @@ const SmallArticleCard = ({
         className="flex gap-4 md:block"
       >
         <div className="w-[120px] h-[95px] md:w-full md:h-auto md:aspect-[16/10] overflow-hidden flex-shrink-0 rounded-sm">
-          <img
+          <SmartImage
             src={article.image}
             alt={article.title}
             className="w-[370px] h-[185px] object-cover"

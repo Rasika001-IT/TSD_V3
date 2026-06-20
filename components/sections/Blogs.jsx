@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../ui/SmartImage";
 import { stripHtml } from "../../utils/stripHtml";
 import Container from "../layout/Container";
 import Link from "next/link";
@@ -91,7 +92,7 @@ const Blogs = ({
                 <div className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col h-full">
 
                   {/* IMAGE */}
-                  <img
+                  <SmartImage
                     src={post.image}
                     alt={stripHtml(
                       post.title

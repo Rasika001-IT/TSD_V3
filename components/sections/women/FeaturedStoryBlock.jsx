@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../../ui/SmartImage";
 import Link from "next/link";
 
 const FeaturedStoryBlock = ({ data }) => {
@@ -31,7 +32,7 @@ const FeaturedStoryBlock = ({ data }) => {
 
             {/* IMAGE */}
             <div className="w-[628px] lg:w-1/2 order-1 lg:order-2 overflow-hidden">
-              <img
+              <SmartImage
                 src={data.image}
                 alt={data.title}
                 className="w-[638px] h-[240px] sm:h-[320px] md:h-[314px] object-cover"

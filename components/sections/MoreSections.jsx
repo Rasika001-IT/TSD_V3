@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../ui/SmartImage";
 import { stripHtml } from "../../utils/stripHtml";
 import Container from "../layout/Container";
 import Link from "next/link";
@@ -139,7 +140,7 @@ const MoreSections = ({
                   <Link
                     href={`/article/${mainPost.slug}`}
                   >
-                    <img
+                    <SmartImage
                       src={mainPost.image}
                       alt={stripHtml(
                         mainPost.title

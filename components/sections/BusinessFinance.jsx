@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../ui/SmartImage";
 import Container from "../layout/Container";
 import Link from "next/link";
 
@@ -61,7 +62,7 @@ const BusinessFinance = ({
             <Link
               href={`/article/${mainPost.slug}`}
             >
-              <img
+              <SmartImage
                 src={mainPost.image}
                 alt={mainPost.title}
                 className="w-[870px] h-[435px] object-cover"
@@ -90,7 +91,7 @@ const BusinessFinance = ({
                     key={post.id}
                     href={`/article/${post.slug}`}
                   >
-                    <img
+                    <SmartImage
                       src={post.image}
                       alt={post.title}
                       className="w-[400px] h-[200px] object-cover"
@@ -122,7 +123,7 @@ const BusinessFinance = ({
                   key={post.id}
                   href={`/article/${post.slug}`}
                 >
-                  <img
+                  <SmartImage
                     src={post.image}
                     alt={post.title}
                     className="w-[400px] h-[200px] object-cover"

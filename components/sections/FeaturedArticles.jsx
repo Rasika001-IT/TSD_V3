@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../ui/SmartImage";
 import { stripHtml } from "../../utils/stripHtml";
 import Container from "../layout/Container";
 import Link from "next/link";
@@ -65,7 +66,7 @@ const FeaturedArticles = ({
             href={`/article/${mainPost.slug}`}
             className="group"
           >
-            <img
+            <SmartImage
               src={mainPost.image}
               alt={stripHtml(mainPost.title)}
               className="w-[776] h-[388px] object-cover"
@@ -97,7 +98,7 @@ const FeaturedArticles = ({
                 href={`/article/${post.slug}`}
                 className="group flex gap-5"
               >
-                <img
+                <SmartImage
                   src={post.image}
                   alt={stripHtml(post.title)}
                   className="w-[170px] h-[85px] object-cover"

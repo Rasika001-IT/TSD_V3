@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../../ui/SmartImage";
 import Link from "next/link";
 
 const StoryRow = ({ title, description, image, reverse, slug }) => {
@@ -18,7 +19,7 @@ const StoryRow = ({ title, description, image, reverse, slug }) => {
 
             {/* IMAGE */}
             <div className="w-[628px] lg:w-1/2 overflow-hidden">
-              <img
+              <SmartImage
                 src={image}
                 alt={title}
                 className="w-[628px] h-[240px] sm:h-[320px] md:h-[314px] object-cover"

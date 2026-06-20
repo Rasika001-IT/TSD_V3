@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../../ui/SmartImage";
 import Link from "next/link";
 const jeevantikaImage = "/assets/images/women/page/jeevantika.png";
 
@@ -15,7 +16,7 @@ const HeroFeature = ({ data }) => {
 
             {/* IMAGE */}
             <div className="w-full lg:w-1/2 overflow-hidden">
-              <img
+              <SmartImage
   src={jeevantikaImage}
   alt={data.title}
   className="w-[480px] h-[280px] sm:h-[380px] md:h-[480px] object-cover"

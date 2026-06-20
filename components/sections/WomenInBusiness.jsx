@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from "../ui/SmartImage";
 import { stripHtml } from "../../utils/stripHtml";
 import { useRef } from "react";
 import Link from "next/link";
@@ -104,7 +105,7 @@ const WomenInBusiness = ({
               z-10
             "
           >
-            <img
+            <SmartImage
               src={leftArrow}
               alt="Previous"
               className="w-7 h-7 opacity-60 hover:opacity-100 transition"
@@ -122,7 +123,7 @@ const WomenInBusiness = ({
               z-10
             "
           >
-            <img
+            <SmartImage
               src={rightArrow}
               alt="Next"
               className="w-7 h-7 opacity-60 hover:opacity-100 transition"
@@ -164,7 +165,7 @@ const WomenInBusiness = ({
                   >
                     <div className="relative group cursor-pointer overflow-hidden">
 
-                      <img
+                      <SmartImage
                         src={
                           WOMEN_IMAGES[
                             index %

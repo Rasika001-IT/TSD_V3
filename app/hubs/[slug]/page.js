@@ -4,6 +4,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/sections/Footer';
 import Newsletter from '@/components/sections/Newsletter';
 import Container from '@/components/layout/Container';
+import SmartImage from '@/components/ui/SmartImage';
 import { getHub, getHubPosts, getHubSeries } from '@/lib/hubs';
 
 export const revalidate = 600;
@@ -57,7 +58,7 @@ export default async function HubPage({ params }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {posts.map((p) => (
                   <Link key={p.slug} href={`/article/${p.slug}`} className="group">
-                    {p.image && <img src={p.image} alt={p.title} className="w-full h-48 object-cover rounded-lg mb-3" />}
+                    {p.image && <SmartImage src={p.image} alt={p.title} className="w-full h-48 rounded-lg mb-3" />}
                     <h3 className="font-heading text-lg leading-snug group-hover:text-primary" dangerouslySetInnerHTML={{ __html: p.title }} />
                   </Link>
                 ))}
