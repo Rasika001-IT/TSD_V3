@@ -1,0 +1,20 @@
+.marquee {
+  overflow: hidden;
+  position: relative;
+  padding-left: 32px;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: scroll 55s linear infinite;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

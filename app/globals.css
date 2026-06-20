@@ -1,6 +1,24 @@
-/* Ported from TSD-Frontend/src/index.css — same base styling for an identical look.
-   NOTE (Phase 2): copy the @font-face declarations from
-   TSD-Frontend/src/styles/fonts.css (Canela + Inter) and the /fonts assets here. */
+/* Ported from TSD-Frontend (index.css + styles/fonts.css) for an identical look. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@font-face {
+  font-family: 'Canela';
+  src: url('/assets/fonts/Canela-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela';
+  src: url('/assets/fonts/Canela-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Canela';
+  src: url('/assets/fonts/Canela-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
