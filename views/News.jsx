@@ -3,60 +3,70 @@ import React, { useState } from "react";
 
 import NewsHero from "../components/news/NewsHero";
 import NewsList from "../components/news/NewsList";
+import NewsListSkeleton from "../components/news/NewsListSkeleton";
 import Pagination from "../components/news/Pagination";
 
 import Newsletter from "../components/sections/Newsletter";
 import Footer from "../components/sections/Footer";
 import Navbar from "../components/layout/Navbar";
 
+import { fetchPostsWithPagination } from "../services/wordpress";
+
 const POSTS_PER_PAGE = 7;
 
-// Posts come from the server (app/news/page.js); page 1 is in the SSR HTML.
-// Pagination is an instant client-side slice (no fetch, no loader).
-const News = ({ posts = [] }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+// Page 1 is server-rendered (initialPosts/initialPagination), so the hero +
+// cards are in the SSR HTML. Paging fetches that page client-side (only ~7
+// posts, not all 472) and shows the skeleton shimmer while loading.
+const News = ({ initialPosts = [], initialPagination }) => {
+  const [posts, setPosts] = useState(initialPosts);
+  const [pagination, setPagination] = useState(initialPagination);
+  const [loading, setLoading] = useState(false);
 
-  const totalPages = Math.ceil(
-    posts.length / POSTS_PER_PAGE
-  );
+  const heroPost = posts[0];
+  const leftPosts = posts.slice(1, 5);
+  const rightPosts = posts.slice(5, 7);
 
-  const startIndex =
-    (currentPage - 1) * POSTS_PER_PAGE;
+  const handlePageChange = async (page) => {
+    if (
+      page < 1 ||
+      page > pagination.totalPages ||
+      page === pagination.currentPage
+    )
+      return;
 
-  const currentPosts = posts.slice(
-    startIndex,
-    startIndex + POSTS_PER_PAGE
-  );
-
-  const heroPost = currentPosts[0];
-
-  const leftPosts = currentPosts.slice(1, 5);
-
-  const rightPosts = currentPosts.slice(5, 7);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    setLoading(true);
+    try {
+      const result = await fetchPostsWithPagination(page, POSTS_PER_PAGE);
+      setPosts((result.posts || []).filter((p) => p.image !== null));
+      setPagination({
+        currentPage: result.currentPage,
+        totalPages: result.totalPages,
+        totalPosts: result.totalPosts,
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (e) {
+      console.error("Failed to load news page", e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <Navbar />
 
-      <NewsHero post={heroPost} />
-
-      <NewsList
-        horizontalPosts={leftPosts}
-        verticalPosts={rightPosts}
-      />
+      {loading ? (
+        <NewsListSkeleton />
+      ) : (
+        <>
+          <NewsHero post={heroPost} />
+          <NewsList horizontalPosts={leftPosts} verticalPosts={rightPosts} />
+        </>
+      )}
 
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
         onPageChange={handlePageChange}
       />
 
