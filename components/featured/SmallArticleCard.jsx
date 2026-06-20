@@ -34,7 +34,7 @@ const SmallArticleCard = ({
         href={`/article/${article.slug}`}
         className="flex gap-4 md:block"
       >
-        <div className="w-[120px] h-[95px] md:w-full md:h-auto md:aspect-[16/10] overflow-hidden flex-shrink-0 rounded-sm">
+        <div className="w-[140px] h-[70px] md:w-full md:h-auto md:aspect-[2/1] overflow-hidden flex-shrink-0 rounded-sm">
           <SmartImage
             src={article.image}
             alt={article.title}

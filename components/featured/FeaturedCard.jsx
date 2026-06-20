@@ -6,7 +6,7 @@ const FeaturedCard = ({ article }) => {
   return (
     <div className="mb-10 md:mb-14 border-b border-gray-200 pb-8 md:pb-10">
       <Link href={`/article/${article.slug}`}>
-        <div className="w-full aspect-[16/10] md:aspect-[16/9] overflow-hidden rounded-sm">
+        <div className="w-full aspect-[2/1] overflow-hidden rounded-sm">
           <SmartImage
             src={article.image}
             alt={article.title}
