@@ -76,6 +76,13 @@ const Navbar = () => {
   const navigate = useRouter();
   const location = usePathname();
 
+  const [search, setSearch] = useState("");
+  const submitSearch = (e) => {
+    e.preventDefault();
+    const q = search.trim();
+    if (q) navigate.push(`/search?q=${encodeURIComponent(q)}`);
+  };
+
   useEffect(() => {
     setAuthenticated(isAuthenticated());
 
@@ -205,21 +212,25 @@ const Navbar = () => {
           <div className="flex items-center gap-3 lg:gap-6">
 
             {/* SEARCH */}
-            <div className="hidden lg:flex items-center bg-white/70 border border-gray-200 rounded-md px-3 py-1.5">
+            <form onSubmit={submitSearch} className="hidden lg:flex items-center bg-white/70 border border-gray-200 rounded-md px-3 py-1.5">
 
               <input
                 type="text"
                 placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 className="bg-transparent outline-none text-[13px] w-32 placeholder-gray-500"
               />
 
-              <img
-                src={searchIcon}
-                alt="Search"
-                className="w-4 h-4 ml-2 opacity-70"
-              />
+              <button type="submit" aria-label="Search">
+                <img
+                  src={searchIcon}
+                  alt="Search"
+                  className="w-4 h-4 ml-2 opacity-70"
+                />
+              </button>
 
-            </div>
+            </form>
 
             {/* AUTH BUTTONS */}
             {authenticated ? (
