@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import usePosts from "../hooks/usePosts";
 
 import NewsHero from "../components/news/NewsHero";
 import NewsList from "../components/news/NewsList";
@@ -10,19 +9,12 @@ import Newsletter from "../components/sections/Newsletter";
 import Footer from "../components/sections/Footer";
 import Navbar from "../components/layout/Navbar";
 
-import Loader from "../components/ui/Loader";
-
 const POSTS_PER_PAGE = 7;
 
-const News = () => {
-  const { posts, loading } = usePosts();
-
+// Posts come from the server (app/news/page.js); page 1 is in the SSR HTML.
+// Pagination is an instant client-side slice (no fetch, no loader).
+const News = ({ posts = [] }) => {
   const [currentPage, setCurrentPage] = useState(1);
-
-  // GLOBAL LOADER
-  if (loading) {
-    return <Loader text="Loading news..." />;
-  }
 
   const totalPages = Math.ceil(
     posts.length / POSTS_PER_PAGE

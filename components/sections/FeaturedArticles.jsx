@@ -1,15 +1,9 @@
 "use client";
+import { stripHtml } from "../../utils/stripHtml";
 import Container from "../layout/Container";
 import Link from "next/link";
 
-const stripHtml = (html) => {
-  const doc = new DOMParser().parseFromString(
-    html,
-    "text/html"
-  );
 
-  return doc.body.textContent || "";
-};
 
 const FeaturedArticles = ({
   posts = [],

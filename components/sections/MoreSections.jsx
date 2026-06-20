@@ -1,4 +1,5 @@
 "use client";
+import { stripHtml } from "../../utils/stripHtml";
 import Container from "../layout/Container";
 import Link from "next/link";
 
@@ -53,19 +54,7 @@ const SECTION_CONFIG = [
   },
 ];
 
-const stripHtml = (html) => {
-  const div = document.createElement(
-    "div"
-  );
 
-  div.innerHTML = html;
-
-  return (
-    div.textContent ||
-    div.innerText ||
-    ""
-  );
-};
 
 const truncateText = (
   text,

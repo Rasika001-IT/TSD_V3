@@ -1,4 +1,3 @@
-"use client";
 import Navbar from "../components/layout/Navbar";
 
 import Hero from "../components/sections/Hero";
@@ -14,22 +13,9 @@ import Footer from "../components/sections/Footer";
 
 import MagazineSection from "../components/MagazineSection";
 
-import usePosts from "../hooks/usePosts";
-
-import Loader from "../components/ui/Loader";
-
-const Home = () => {
-  const {
-    posts,
-    loading,
-    categories,
-  } = usePosts();
-
-  // SINGLE GLOBAL LOADER
-  if (loading) {
-    return <Loader text="Loading homepage..." />;
-  }
-
+// Server component: data is fetched on the server (app/page.js) and passed in,
+// so the whole homepage is in the HTML on first paint — no loader, no client fetch.
+const Home = ({ posts = [], categories = [] }) => {
   return (
     <div className="bg-[#FCF9F4]">
       <Navbar />

@@ -1,4 +1,5 @@
 "use client";
+import { stripHtml } from "../../utils/stripHtml";
 import { useRef } from "react";
 import Link from "next/link";
 
@@ -28,16 +29,7 @@ const WOMEN_IMAGES = [
 
 const EXCLUDED_POST_ID = 4259;
 
-const stripHtml = (html) => {
-  const div = document.createElement("div");
-  div.innerHTML = html;
 
-  return (
-    div.textContent ||
-    div.innerText ||
-    ""
-  );
-};
 
 const truncateText = (
   text,

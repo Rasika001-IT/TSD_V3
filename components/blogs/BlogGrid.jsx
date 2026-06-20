@@ -1,7 +1,7 @@
 "use client";
 import Container from "../layout/Container";
 import BlogCard from "./BlogCard";
-import Loader from "../ui/Loader";
+import BlogCardSkeleton from "./BlogCardSkeleton";
 
 const BlogGrid = ({
   posts,
@@ -26,9 +26,13 @@ const BlogGrid = ({
           <div className="w-20 h-[2px] bg-primary mx-auto"></div>
         </div>
 
-        {/* GRID */}
+        {/* GRID — skeleton shimmer while paginating, real cards otherwise */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.length > 0 ? (
+          {loading ? (
+            Array.from({ length: 9 }).map((_, i) => (
+              <BlogCardSkeleton key={i} />
+            ))
+          ) : posts.length > 0 ? (
             posts.map((blog) => (
               <BlogCard key={blog.id} data={blog} />
             ))
@@ -174,14 +178,6 @@ const BlogGrid = ({
             </button>
 
           </div>
-        )}
-
-        {/* PAGE CHANGE LOADER */}
-        {loading && pagination.currentPage > 1 && (
-          <Loader
-            fullScreen={false}
-            text="Loading more blogs..."
-          />
         )}
 
       </Container>

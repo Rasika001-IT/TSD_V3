@@ -1,11 +1,8 @@
 "use client";
+import { stripHtml } from "../../utils/stripHtml";
 import Link from "next/link";
 
-const stripHtml = (html) => {
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  return div.textContent || div.innerText || "";
-};
+
 
 const NewsCardVertical = ({ post }) => {
   return (
