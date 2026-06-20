@@ -16,34 +16,21 @@ const Newsletter = () => {
   };
 
   const handleSubmit = async () => {
+    if (!formData.email) {
+      alert("Please enter your email");
+      return;
+    }
     try {
-      const response = await fetch("http://localhost/newsletter.php", {
+      const response = await fetch("/api/subscribe", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
-      console.log("STATUS:", response.status);
-
-      const text = await response.text();
-
-      console.log("RAW RESPONSE:", text);
-
-      const data = JSON.parse(text);
-
-      alert(data.message);
-
-      if (data.success) {
-        setFormData({
-          name: "",
-          email: "",
-        });
-      }
-
+      const data = await response.json();
+      alert(data.message || (response.ok ? "Subscribed!" : "Something went wrong"));
+      if (response.ok) setFormData({ name: "", email: "" });
     } catch (error) {
-      console.error("FULL ERROR:", error);
+      console.error(error);
       alert("Something went wrong");
     }
   };

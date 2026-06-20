@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TiptapEditor from "./TiptapEditor";
 import RankingEntriesEditor from "./RankingEntriesEditor";
+import SocialCascadeEditor from "./SocialCascadeEditor";
 
 const POST_TYPES = ["news", "blog", "ranking", "report", "feature"];
 const REPORT_TYPES = ["industry_report", "tsd_insights", "market_pulse", "whitepaper", "annual_outlook"];
@@ -55,10 +56,12 @@ export default function PostEditor({ taxonomy, post }) {
     is_gated: post?.is_gated || false,
     page_count: post?.page_count || "",
     pdf_url: post?.pdf_url || "",
+    send_to_newsletter: post?.send_to_newsletter || false,
   });
   const [categoryIds, setCategoryIds] = useState(post?.category_ids || []);
   const [tagIds, setTagIds] = useState(post?.tag_ids || []);
   const [rankingEntries, setRankingEntries] = useState(post?.ranking_entries || []);
+  const [social, setSocial] = useState(post?.social_promotions || []);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -112,6 +115,8 @@ export default function PostEditor({ taxonomy, post }) {
       pdf_url: form.post_type === "report" ? form.pdf_url || null : null,
       // Only send ranking_entries for rankings (so other types aren't wiped)
       ...(form.post_type === "ranking" ? { ranking_entries: rankingEntries } : {}),
+      social_promotions: social,
+      send_to_newsletter: form.send_to_newsletter,
     };
     try {
       const res = await fetch(editing ? `/api/admin/posts/${post.id}` : "/api/admin/posts", {
@@ -272,6 +277,15 @@ export default function PostEditor({ taxonomy, post }) {
               </div>
             </Field>
           </div>
+
+          <div className="bg-white border border-gray-200 rounded-xl p-4">
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={form.send_to_newsletter} onChange={(e) => set("send_to_newsletter", e.target.checked)} />
+              Send to newsletter on publish
+            </label>
+          </div>
+
+          <SocialCascadeEditor items={social} onChange={setSocial} />
         </div>
       </div>
     </div>

@@ -18,6 +18,7 @@ export default async function PanelLayout({ children }) {
         <nav className="flex-1 px-3 py-4 space-y-1 text-sm">
           <Link href="/admin" className="block px-3 py-2 rounded-md hover:bg-white/10">Dashboard</Link>
           <Link href="/admin/posts/new" className="block px-3 py-2 rounded-md hover:bg-white/10">+ New Post</Link>
+          <Link href="/admin/hubs" className="block px-3 py-2 rounded-md hover:bg-white/10">Industry Hubs</Link>
         </nav>
         <div className="px-4 py-4 border-t border-white/10 text-xs text-white/60">
           <div className="truncate mb-2">{user?.email}</div>
