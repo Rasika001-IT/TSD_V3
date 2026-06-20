@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import TiptapEditor from "./TiptapEditor";
 import RankingEntriesEditor from "./RankingEntriesEditor";
 import SocialCascadeEditor from "./SocialCascadeEditor";
+import DeletePostButton from "./DeletePostButton";
+import NewsletterButton from "./NewsletterButton";
 
 const POST_TYPES = ["news", "blog", "ranking", "report", "feature"];
 const REPORT_TYPES = ["industry_report", "tsd_insights", "market_pulse", "whitepaper", "annual_outlook"];
@@ -140,7 +142,15 @@ export default function PostEditor({ taxonomy, post }) {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-heading text-2xl text-[#1D1F26]">{editing ? "Edit Post" : "Add New Post"}</h1>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          {editing && (
+            <DeletePostButton
+              id={post.id}
+              redirect
+              className="px-4 py-2 rounded-md text-sm border border-red-200 text-red-600 bg-white hover:bg-red-50 disabled:opacity-60"
+            />
+          )}
+          {editing && form.send_to_newsletter && <NewsletterButton id={post.id} />}
           <button onClick={() => save("draft")} disabled={saving} className="px-4 py-2 rounded-md text-sm border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-60">Save Draft</button>
           <button onClick={() => save("published")} disabled={saving} className="px-4 py-2 rounded-md text-sm bg-primary text-white font-medium hover:opacity-90 disabled:opacity-60">{saving ? "Saving…" : "Publish"}</button>
         </div>

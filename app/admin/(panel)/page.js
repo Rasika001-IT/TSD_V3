@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getAdminPosts } from '@/lib/admin';
+import DeletePostButton from '@/components/admin/DeletePostButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,13 +63,14 @@ export default async function Dashboard() {
                 <td className="px-4 py-3 text-gray-500">
                   {p.updated_at ? new Date(p.updated_at).toLocaleDateString() : '—'}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-right whitespace-nowrap">
                   <Link
                     href={`/admin/posts/${p.id}`}
-                    className="text-primary hover:underline"
+                    className="text-primary hover:underline mr-4"
                   >
                     Edit
                   </Link>
+                  <DeletePostButton id={p.id} />
                 </td>
               </tr>
             ))}
