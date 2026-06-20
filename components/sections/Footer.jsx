@@ -279,15 +279,6 @@ const Footer = () => {
                   </Link>
                 </li>
 
-                <li>
-                  <Link
-                    href="/login"
-                    className="inline-flex py-2 -my-2 hover:text-white transition-colors duration-300"
-                  >
-                    Login
-                  </Link>
-                </li>
-
               </ul>
 
             </div>
@@ -312,17 +303,17 @@ const Footer = () => {
             <div className="flex items-center gap-6">
 
               <Link
-                href="/privacy-policy"
-                className="py-2 -my-2"
-              >
-                Privacy Policy
-              </Link>
-
-              <Link
                 href="/admin"
                 className="py-2 -my-2"
               >
                 Login
+              </Link>
+
+              <Link
+                href="/privacy-policy"
+                className="py-2 -my-2"
+              >
+                Privacy Policy
               </Link>
 
               <Link
