@@ -2,8 +2,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TiptapEditor from "./TiptapEditor";
+import RankingEntriesEditor from "./RankingEntriesEditor";
 
 const POST_TYPES = ["news", "blog", "ranking", "report", "feature"];
+const REPORT_TYPES = ["industry_report", "tsd_insights", "market_pulse", "whitepaper", "annual_outlook"];
 const FORMATS = {
   news: ["breaking", "standard", "brief", "analysis", "explainer"],
   blog: ["explainer", "how_to", "listicle", "deep_dive", "opinion", "interview", "case_study"],
@@ -48,9 +50,15 @@ export default function PostEditor({ taxonomy, post }) {
     entity_tags: (post?.entity_tags || []).join(", "),
     industry_tag: post?.industry_tag || "",
     region: post?.region || "",
+    // Reports
+    report_type: post?.report_type || "",
+    is_gated: post?.is_gated || false,
+    page_count: post?.page_count || "",
+    pdf_url: post?.pdf_url || "",
   });
   const [categoryIds, setCategoryIds] = useState(post?.category_ids || []);
   const [tagIds, setTagIds] = useState(post?.tag_ids || []);
+  const [rankingEntries, setRankingEntries] = useState(post?.ranking_entries || []);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -66,6 +74,17 @@ export default function PostEditor({ taxonomy, post }) {
     const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
     const data = await res.json();
     if (data.url) set("featured_image", data.url);
+    e.target.value = "";
+  };
+
+  const uploadPdf = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const fd = new FormData();
+    fd.append("file", file);
+    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+    const data = await res.json();
+    if (data.url) set("pdf_url", data.url);
     e.target.value = "";
   };
 
@@ -86,6 +105,13 @@ export default function PostEditor({ taxonomy, post }) {
       scheduled_at: form.scheduled_at ? new Date(form.scheduled_at).toISOString() : null,
       category_ids: categoryIds,
       tag_ids: tagIds,
+      // Reports only carry meaning for report type, but harmless to always send
+      report_type: form.post_type === "report" ? form.report_type || null : null,
+      is_gated: form.post_type === "report" ? form.is_gated : false,
+      page_count: form.post_type === "report" ? form.page_count || null : null,
+      pdf_url: form.post_type === "report" ? form.pdf_url || null : null,
+      // Only send ranking_entries for rankings (so other types aren't wiped)
+      ...(form.post_type === "ranking" ? { ranking_entries: rankingEntries } : {}),
     };
     try {
       const res = await fetch(editing ? `/api/admin/posts/${post.id}` : "/api/admin/posts", {
@@ -134,6 +160,10 @@ export default function PostEditor({ taxonomy, post }) {
             <Field label="Secondary Keywords (comma-separated)"><input className={input} value={form.secondary_keywords} onChange={(e) => set("secondary_keywords", e.target.value)} /></Field>
             <Field label="Entity Tags (comma-separated)"><input className={input} value={form.entity_tags} onChange={(e) => set("entity_tags", e.target.value)} /></Field>
           </div>
+
+          {form.post_type === "ranking" && (
+            <RankingEntriesEditor entries={rankingEntries} onChange={setRankingEntries} />
+          )}
         </div>
 
         {/* SIDEBAR */}
@@ -167,6 +197,31 @@ export default function PostEditor({ taxonomy, post }) {
               <input type="datetime-local" className={input} value={form.scheduled_at} onChange={(e) => set("scheduled_at", e.target.value)} />
             </Field>
           </div>
+
+          {form.post_type === "report" && (
+            <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <h3 className="font-heading text-sm mb-3">Report</h3>
+              <Field label="Report Type">
+                <select className={input} value={form.report_type} onChange={(e) => set("report_type", e.target.value)}>
+                  <option value="">—</option>
+                  {REPORT_TYPES.map((r) => <option key={r} value={r}>{r}</option>)}
+                </select>
+              </Field>
+              <Field label="PDF">
+                {form.pdf_url && (
+                  <a href={form.pdf_url} target="_blank" rel="noreferrer" className="block text-xs text-primary underline mb-2 truncate">{form.pdf_url}</a>
+                )}
+                <input type="file" accept="application/pdf" onChange={uploadPdf} className="text-sm" />
+              </Field>
+              <Field label="Page Count">
+                <input type="number" className={input} value={form.page_count} onChange={(e) => set("page_count", e.target.value)} />
+              </Field>
+              <label className="flex items-center gap-2 text-sm mt-1">
+                <input type="checkbox" checked={form.is_gated} onChange={(e) => set("is_gated", e.target.checked)} />
+                Gated (require lead capture to download)
+              </label>
+            </div>
+          )}
 
           <div className="bg-white border border-gray-200 rounded-xl p-4">
             <Field label="Featured Image">
