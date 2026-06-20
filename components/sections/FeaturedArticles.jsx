@@ -69,7 +69,7 @@ const FeaturedArticles = ({
             <SmartImage
               src={mainPost.image}
               alt={stripHtml(mainPost.title)}
-              className="w-[776] h-[388px] object-cover"
+              className="w-full h-[260px] sm:h-[340px] lg:h-[388px] rounded-sm"
             />
 
             <div className="mt-6">
@@ -101,7 +101,7 @@ const FeaturedArticles = ({
                 <SmartImage
                   src={post.image}
                   alt={stripHtml(post.title)}
-                  className="w-[170px] h-[85px] object-cover"
+                  className="w-[170px] h-[110px] flex-shrink-0 rounded-sm"
                 />
 
                 <div>

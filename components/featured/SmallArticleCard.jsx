@@ -38,7 +38,7 @@ const SmallArticleCard = ({
           <SmartImage
             src={article.image}
             alt={article.title}
-            className="w-[370px] h-[185px] object-cover"
+            className="w-full h-full"
           />
         </div>
 

@@ -10,7 +10,7 @@ const FeaturedCard = ({ article }) => {
           <SmartImage
             src={article.image}
             alt={article.title}
-            className="w-[860px] h-[430px] object-cover"
+            className="w-full h-full"
           />
         </div>
       </Link>
