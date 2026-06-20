@@ -1,6 +1,7 @@
 "use client";
 import { stripHtml } from "../../utils/stripHtml";
 import Link from "next/link";
+import SmartImage from "../ui/SmartImage";
 
 
 
@@ -8,10 +9,10 @@ const NewsCardVertical = ({ post }) => {
   return (
     <Link href={`/article/${post.slug}`}>
       <div className="cursor-pointer group transition-all duration-300 hover:opacity-90 space-y-3">
-        <img
+        <SmartImage
           src={post.image}
           alt="news"
-          className="w-[340px] h-[220px] md:h-[170px] object-cover rounded-xl md:rounded-sm transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          className="w-[340px] max-w-full h-[220px] md:h-[170px] rounded-xl md:rounded-sm"
         />
 
         <h3

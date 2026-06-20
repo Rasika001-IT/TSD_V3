@@ -2,6 +2,7 @@
 import Link from "next/link";
 
 import Loader from "../ui/Loader";
+import SmartImage from "../ui/SmartImage";
 
 const StandardArticleTemplate = ({
   post,
@@ -21,10 +22,10 @@ const StandardArticleTemplate = ({
   return (
     <section className="max-w-[1100px] mx-auto px-4 sm:px-6 py-8 sm:py-14">
       {post.image && (
-        <img
+        <SmartImage
           src={post.image}
           alt={post.title}
-          className="w-full h-[220px] sm:h-[350px] lg:h-[500px] object-cover mb-6 sm:mb-8"
+          className="w-full h-[220px] sm:h-[350px] lg:h-[500px] mb-6 sm:mb-8"
         />
       )}
 
@@ -106,10 +107,10 @@ const StandardArticleTemplate = ({
               href={`/article/${item.slug}`}
               className="group"
             >
-              <img
+              <SmartImage
                 src={item.image}
                 alt={item.title}
-                className="w-full h-[220px] sm:h-[260px] object-cover mb-4"
+                className="w-full h-[220px] sm:h-[260px] mb-4"
               />
 
               <h3 className="font-heading text-lg sm:text-xl leading-snug group-hover:opacity-80 transition-opacity">

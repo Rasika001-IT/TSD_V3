@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import SmartImage from "../ui/SmartImage";
 
 const RankingTemplate = ({ post, taxonomyData = [], mustReadPosts = [], rankingEntries = [] }) => {
   if (!post) return null;
@@ -7,7 +8,7 @@ const RankingTemplate = ({ post, taxonomyData = [], mustReadPosts = [], rankingE
   return (
     <section className="max-w-[1100px] mx-auto px-4 sm:px-6 py-8 sm:py-14">
       {post.image && (
-        <img src={post.image} alt={post.title} className="w-full h-[220px] sm:h-[350px] lg:h-[500px] object-cover mb-6 sm:mb-8" />
+        <SmartImage src={post.image} alt={post.title} className="w-full h-[220px] sm:h-[350px] lg:h-[500px] mb-6 sm:mb-8" />
       )}
 
       <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4">

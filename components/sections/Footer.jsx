@@ -319,6 +319,13 @@ const Footer = () => {
               </Link>
 
               <Link
+                href="/admin"
+                className="py-2 -my-2"
+              >
+                Login
+              </Link>
+
+              <Link
                 href="/content-usage-policy"
                 className="py-2 -my-2"
               >

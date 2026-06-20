@@ -1,20 +1,19 @@
 "use client";
 import Link from "next/link";
+import SmartImage from "../ui/SmartImage";
 
 const BlogCard = ({ data }) => {
   return (
     <div className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-md transition duration-300">
-      
+
       {/* IMAGE */}
-      <div className="w-full h-[200px] overflow-hidden">
-        {data.image && (
-          <img
-            src={data.image}
-            alt={data.title}
-            className="w-[360px] h-[180px] object-cover"
-          />
-        )}
-      </div>
+      {data.image && (
+        <SmartImage
+          src={data.image}
+          alt={data.title}
+          className="w-full h-[200px]"
+        />
+      )}
 
       {/* CONTENT */}
       <div className="p-5">

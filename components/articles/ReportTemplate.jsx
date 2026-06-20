@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import SmartImage from "../ui/SmartImage";
 
 const REPORT_LABELS = {
   industry_report: "Industry Report",
@@ -27,7 +28,7 @@ const ReportTemplate = ({ post, taxonomyData = [], mustReadPosts = [] }) => {
       {post.subtitle && <p className="text-lg text-gray-600 mb-6 font-body">{post.subtitle}</p>}
 
       {post.image && (
-        <img src={post.image} alt={post.title} className="w-full h-[260px] sm:h-[380px] object-cover mb-8" />
+        <SmartImage src={post.image} alt={post.title} className="w-full h-[260px] sm:h-[380px] mb-8" />
       )}
 
       {/* DOWNLOAD BOX */}

@@ -2,6 +2,7 @@
 import { stripHtml } from "../../utils/stripHtml";
 import Container from "../layout/Container";
 import Link from "next/link";
+import SmartImage from "../ui/SmartImage";
 
 
 
@@ -14,10 +15,10 @@ const NewsHero = ({ post }) => {
         {/* IMAGE */}
         <div className="flex justify-center mb-6 md:mb-10">
           <Link href={`/article/${post.slug}`} className="w-full">
-            <img
+            <SmartImage
               src={post.image}
               alt="news"
-              className="w-[968px] max-w-[1000px] h-[260px] sm:h-[340px] md:h-[484px] object-cover object-center rounded-xl md:rounded-sm mx-auto"
+              className="w-[968px] max-w-[1000px] h-[260px] sm:h-[340px] md:h-[484px] rounded-xl md:rounded-sm mx-auto"
             />
           </Link>
         </div>
