@@ -3,12 +3,14 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSessionUser } from '@/lib/supabase-server';
 import { slugify } from '@/lib/slug';
 
+// Trim env values — a trailing space/newline pasted into the host's env vars
+// makes the AWS SDK compute a bad signature ("signature does not match").
 const r2 = new S3Client({
   region: 'auto',
-  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  endpoint: `https://${(process.env.R2_ACCOUNT_ID || '').trim()}.r2.cloudflarestorage.com`,
   credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+    accessKeyId: (process.env.R2_ACCESS_KEY_ID || '').trim(),
+    secretAccessKey: (process.env.R2_SECRET_ACCESS_KEY || '').trim(),
   },
 });
 

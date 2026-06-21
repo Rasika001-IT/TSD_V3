@@ -5,6 +5,9 @@ export default {
   content: [
     './app/**/*.{js,jsx}',
     './components/**/*.{js,jsx}',
+    // Page-level views live here too — without this glob, classes used ONLY in
+    // a view (e.g. the category page grid/sidebar) are never generated.
+    './views/**/*.{js,jsx}',
   ],
   theme: {
     extend: {
