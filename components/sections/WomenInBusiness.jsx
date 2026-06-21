@@ -161,7 +161,7 @@ const WomenInBusiness = ({
               (post, index) => (
                 <SwiperSlide key={post.id}>
                   <Link
-                    href={`/women-in-business/${post.slug}`}
+                    href={`/article/${post.slug}`}
                   >
                     <div className="relative group cursor-pointer overflow-hidden">
 
