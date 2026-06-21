@@ -161,7 +161,7 @@ export default function PostEditor({ taxonomy, post }) {
   // parent so duplicate names (Crypto / Sports under both News and Blogs) are
   // unambiguous.
   const SITE_CATEGORY_SLUGS = new Set([
-    "news", "blogs", "featured-articles", "women-of-impact", "editors-highlights",
+    "news", "blogs", "featured-articles", "women-of-impact", "editors-highlights", "ai",
     "breaking-news", "crypto", "industries", "markets", "regulations", "sports", "startups",
     "crypto-blogs", "events", "explainers", "how-to", "lifestyle", "sports-blogs", "travel",
   ]);

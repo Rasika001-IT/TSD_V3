@@ -3,57 +3,11 @@ import SmartImage from "../ui/SmartImage";
 import { stripHtml } from "../../utils/stripHtml";
 import Container from "../layout/Container";
 import Link from "next/link";
+import { MORE_SECTIONS } from "../../lib/home-sections";
 
-const SECTION_CONFIG = [
-  {
-    title: "Regulations",
-    categoryId: 121,
-    route: "/category/breaking-news",
-    offset: 0,
-  },
-  {
-    title: "Sports",
-    categoryId: 121,
-    route: "/category/breaking-news",
-    offset: 4,
-  },
-  {
-    title: "Startups",
-    categoryId: 128,
-    route: "/category/explainers",
-    offset: 0,
-  },
-  {
-    title: "Crypto",
-    categoryId: 123,
-    route: "/category/crypto",
-    offset: 0,
-  },
-  {
-    title: "Industry",
-    categoryId: 125,
-    route: "/category/industries",
-    offset: 0,
-  },
-  {
-    title: "Markets",
-    categoryId: 125,
-    route: "/category/industries",
-    offset: 4,
-  },
-  {
-    title: "Travel",
-    categoryId: 129,
-    route: "/category/how-to",
-    offset: 0,
-  },
-  {
-    title: "Events",
-    categoryId: 131,
-    route: "/category/events",
-    offset: 0,
-  },
-];
+// Column definitions come from the shared home-sections config so the live grid
+// and the editor preview can never drift apart.
+const SECTION_CONFIG = MORE_SECTIONS;
 
 
 
@@ -95,16 +49,14 @@ const MoreSections = ({
                 posts
                   .filter((post) =>
                     post.categories.includes(
-                      section.categoryId
+                      section.wpId
                     )
                   )
-                  .slice(
-                    section.offset,
-                    section.offset + 4
-                  );
+                  .slice(0, 4);
 
+              // Show whatever posts the category has; only skip an empty one.
               if (
-                categoryPosts.length < 4
+                categoryPosts.length === 0
               )
                 return null;
 

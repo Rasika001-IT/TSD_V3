@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MORE_SECTIONS, HOME_SECTIONS } from "../../lib/home-sections";
 
 // #7 "Where this post appears" — a visual site map. Each public surface the
 // post lands on is drawn as a low-fidelity skeleton wireframe of that page
@@ -280,13 +281,19 @@ export default function PostPreview({ post, taxonomy }) {
   const isFeatured = post.post_type === "feature" || post.promotion === "featured" || post.promotion === "hero";
   const main = TYPE_MAIN[post.post_type] || { label: "Article", href: "/" };
 
-  // Which homepage sections light up for this post.
+  // Which homepage sections light up for this post — computed from the post's
+  // REAL category slugs against the shared home-sections config, so the preview
+  // matches the live layout instead of guessing from post_type.
+  const postSlugs = cats.map((c) => c.slug);
+  const hasAny = (slugs) => slugs.some((s) => postSlugs.includes(s));
   const highlightNames = [];
-  if (isFeatured) highlightNames.push("Featured Articles");
-  if (isWomen) highlightNames.push("Women in Business");
-  if (post.post_type === "news") highlightNames.push("Business & Finance", "More Sections");
-  if (post.post_type === "blog") highlightNames.push("Blogs");
-  if (highlightNames.length === 0) highlightNames.push("Featured Articles");
+  if (isFeatured || hasAny(HOME_SECTIONS.featuredArticles.slugs))
+    highlightNames.push("Featured Articles");
+  if (hasAny(HOME_SECTIONS.womenInBusiness.slugs)) highlightNames.push("Women in Business");
+  if (hasAny(HOME_SECTIONS.businessFinance.slugs)) highlightNames.push("Business & Finance");
+  if (MORE_SECTIONS.some((s) => postSlugs.includes(s.slug))) highlightNames.push("More Sections");
+  if (post.post_type === "blog" || hasAny(HOME_SECTIONS.blogs.slugs))
+    highlightNames.push("Blogs");
 
   // A post only appears in the real live listings once published — so render
   // the actual pages (iframes, post highlighted in place) for published posts,
@@ -322,9 +329,10 @@ export default function PostPreview({ post, taxonomy }) {
           </>
         ) : (
           <>
-            Map of where this post will appear. It’s{" "}
+            Map of where this post will appear, based on its categories. It’s{" "}
             <span className="text-amber-600">{post.status}</span> — publish it to see it on the real
-            pages below.
+            pages below. Each section shows the most-recent posts, so it appears once it’s recent
+            enough.
           </>
         )}
       </p>
