@@ -54,12 +54,8 @@ const MoreSections = ({
                   )
                   .slice(0, 4);
 
-              // Show whatever posts the category has; only skip an empty one.
-              if (
-                categoryPosts.length === 0
-              )
-                return null;
-
+              // Always render all 8 columns to keep the 4×2 grid intact — an
+              // empty category shows its header with a placeholder, never hides.
               const [
                 mainPost,
                 ...bulletPosts
@@ -88,55 +84,67 @@ const MoreSections = ({
                     {section.title} →
                   </Link>
 
-                  {/* MAIN IMAGE */}
-                  <Link
-                    href={`/article/${mainPost.slug}`}
-                  >
-                    <SmartImage
-                      src={mainPost.image}
-                      alt={stripHtml(
-                        mainPost.title
-                      )}
-                      className="w-full aspect-[2/1] mb-4"
-                    />
-                  </Link>
+                  {mainPost ? (
+                    <>
+                      {/* MAIN IMAGE */}
+                      <Link
+                        href={`/article/${mainPost.slug}`}
+                      >
+                        <SmartImage
+                          src={mainPost.image}
+                          alt={stripHtml(
+                            mainPost.title
+                          )}
+                          className="w-full aspect-[2/1] mb-4"
+                        />
+                      </Link>
 
-                  {/* MAIN TITLE */}
-                  <Link
-                    href={`/article/${mainPost.slug}`}
-                  >
-                    <h3
-                      className="font-heading font-semibold text-[18px] leading-snug mb-4 hover:text-[#C89632] transition"
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          mainPost.title,
-                      }}
-                    />
-                  </Link>
+                      {/* MAIN TITLE */}
+                      <Link
+                        href={`/article/${mainPost.slug}`}
+                      >
+                        <h3
+                          className="font-heading font-semibold text-[18px] leading-snug mb-4 hover:text-[#C89632] transition"
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              mainPost.title,
+                          }}
+                        />
+                      </Link>
 
-                  {/* BULLET POSTS */}
-                  <ul className="space-y-3 text-[14px] text-[#666]">
-                    {bulletPosts.map(
-                      (post) => (
-                        <li
-                          key={post.id}
-                        >
-                          <Link
-                            href={`/article/${post.slug}`}
-                            className="hover:text-[#C89632] transition"
-                          >
-                            •{" "}
-                            {truncateText(
-                              stripHtml(
-                                post.title
-                              ),
-                              65
-                            )}
-                          </Link>
-                        </li>
-                      )
-                    )}
-                  </ul>
+                      {/* BULLET POSTS */}
+                      <ul className="space-y-3 text-[14px] text-[#666]">
+                        {bulletPosts.map(
+                          (post) => (
+                            <li
+                              key={post.id}
+                            >
+                              <Link
+                                href={`/article/${post.slug}`}
+                                className="hover:text-[#C89632] transition"
+                              >
+                                •{" "}
+                                {truncateText(
+                                  stripHtml(
+                                    post.title
+                                  ),
+                                  65
+                                )}
+                              </Link>
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </>
+                  ) : (
+                    /* EMPTY STATE — keeps the column (and grid) in place */
+                    <>
+                      <div className="w-full aspect-[2/1] mb-4 rounded bg-[#000]/5" />
+                      <p className="text-[14px] text-[#999] italic">
+                        No stories yet.
+                      </p>
+                    </>
+                  )}
 
                 </div>
               );
