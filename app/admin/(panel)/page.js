@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { getAdminPosts, POST_SORTS } from '@/lib/admin';
+import { getAdminPosts, POST_SORTS, POST_STATUSES } from '@/lib/admin';
 import DeletePostButton from '@/components/admin/DeletePostButton';
-import SortSelect from '@/components/admin/SortSelect';
+import DashboardControls from '@/components/admin/DashboardControls';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,15 +18,19 @@ const statusColor = {
 export default async function Dashboard({ searchParams }) {
   const sp = (await searchParams) || {};
   const sort = POST_SORTS[sp.sort] ? sp.sort : 'recent';
+  const status = POST_STATUSES.includes(sp.status) ? sp.status : '';
+  const q = (sp.q || '').toString();
   const page = Math.max(1, parseInt(sp.page, 10) || 1);
 
-  const { posts, total } = await getAdminPosts({ page, perPage: PER_PAGE, sort });
+  const { posts, total } = await getAdminPosts({ page, perPage: PER_PAGE, sort, q, status });
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
   const start = total === 0 ? 0 : (page - 1) * PER_PAGE + 1;
   const end = (page - 1) * PER_PAGE + posts.length;
 
   const qs = (p) => {
     const params = new URLSearchParams();
+    if (q) params.set('q', q);
+    if (status) params.set('status', status);
     if (sort !== 'recent') params.set('sort', sort);
     if (p > 1) params.set('page', String(p));
     const s = params.toString();
@@ -43,7 +47,7 @@ export default async function Dashboard({ searchParams }) {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <SortSelect sorts={POST_SORTS} current={sort} />
+          <DashboardControls sorts={POST_SORTS} statuses={POST_STATUSES} q={q} status={status} sort={sort} />
           <Link
             href="/admin/posts/new"
             className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:opacity-90"

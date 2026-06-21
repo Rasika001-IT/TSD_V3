@@ -244,6 +244,23 @@ const Surface = ({ title, subtitle, href, children }) => (
   </div>
 );
 
+// Live iframe of the real public page, scrolled to + highlighting the post via
+// the ?ph=<slug> param (handled by PreviewHighlighter on the public side).
+const LiveFrame = ({ title, path, src }) => (
+  <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
+    <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-200 bg-gray-50">
+      <div>
+        <h2 className="font-heading text-sm text-[#1D1F26]">{title}</h2>
+        <p className="text-[11px] text-gray-400">{path}</p>
+      </div>
+      <Link href={src} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline whitespace-nowrap">
+        Open ↗
+      </Link>
+    </div>
+    <iframe src={src} title={title} loading="lazy" className="w-full h-[540px] bg-white" />
+  </div>
+);
+
 export default function PostPreview({ post, taxonomy }) {
   const cats = (post.category_ids || [])
     .map((id) => (taxonomy.categories || []).find((c) => c.id === id))
@@ -271,6 +288,24 @@ export default function PostPreview({ post, taxonomy }) {
   if (post.post_type === "blog") highlightNames.push("Blogs");
   if (highlightNames.length === 0) highlightNames.push("Featured Articles");
 
+  // A post only appears in the real live listings once published — so render
+  // the actual pages (iframes, post highlighted in place) for published posts,
+  // and fall back to the wireframe map (which uses the post's own data) for
+  // drafts/unpublished, which wouldn't show up in the live sections yet.
+  const published = post.status === "published";
+  const slug = post.slug;
+  const ph = slug ? `?ph=${slug}` : "";
+
+  const liveSurfaces = [
+    { title: "Homepage", path: "/", src: `/${ph}` },
+    { title: `Main ${main.label} page`, path: main.href, src: `${main.href}${ph}` },
+    ...subCats.map((c) => ({ title: `${c.name} category page`, path: c.href, src: `${c.href}${ph}` })),
+    ...(isWomen
+      ? [{ title: "Women in Business", path: "/women-in-business", src: `/women-in-business${ph}` }]
+      : []),
+    ...(slug ? [{ title: "Full article page", path: `/article/${slug}`, src: `/article/${slug}` }] : []),
+  ];
+
   return (
     <div className="p-8 max-w-6xl">
       <div className="flex items-center justify-between mb-1">
@@ -280,55 +315,63 @@ export default function PostPreview({ post, taxonomy }) {
         </Link>
       </div>
       <p className="text-sm text-gray-500 mb-6">
-        Each frame is a public page; the{" "}
-        <span className="text-primary font-medium">highlighted</span> block is where this post shows
-        up.
-        {post.status !== "published" && (
-          <span className="ml-1 text-amber-600">
-            It’s {post.status} — it won’t appear in live listings until published.
-          </span>
+        {published ? (
+          <>
+            Each frame is the live page with this post{" "}
+            <span className="text-primary font-medium">highlighted</span> where it appears.
+          </>
+        ) : (
+          <>
+            Map of where this post will appear. It’s{" "}
+            <span className="text-amber-600">{post.status}</span> — publish it to see it on the real
+            pages below.
+          </>
         )}
       </p>
 
       {!post.featured_image && (
         <p className="mb-6 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-4 py-2">
-          No featured image set — the highlighted slots will show a grey box until you add one.
+          No featured image set — news &amp; blog posts need one before they can be published.
         </p>
       )}
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Surface title="Homepage" subtitle="/" href="/">
-          <HomeWire post={post} highlightNames={highlightNames} />
-        </Surface>
-
-        <Surface title={`Main ${main.label} page`} subtitle={main.href} href={main.href}>
-          <ListingWire post={post} path={main.href} />
-        </Surface>
-
-        {subCats.map((c) => (
-          <Surface key={c.id} title={`${c.name} category page`} subtitle={c.href} href={c.href}>
-            <CategoryWire post={post} path={c.href} title={c.name} />
+      {published ? (
+        <div className="grid xl:grid-cols-2 gap-6">
+          {liveSurfaces.map((s) => (
+            <LiveFrame key={s.path} title={s.title} path={s.path} src={s.src} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid lg:grid-cols-2 gap-6">
+          <Surface title="Homepage" subtitle="/" href="/">
+            <HomeWire post={post} highlightNames={highlightNames} />
           </Surface>
-        ))}
 
-        {isWomen && (
+          <Surface title={`Main ${main.label} page`} subtitle={main.href} href={main.href}>
+            <ListingWire post={post} path={main.href} />
+          </Surface>
+
+          {subCats.map((c) => (
+            <Surface key={c.id} title={`${c.name} category page`} subtitle={c.href} href={c.href}>
+              <CategoryWire post={post} path={c.href} title={c.name} />
+            </Surface>
+          ))}
+
+          {isWomen && (
+            <Surface title="Women in Business" subtitle="/women-in-business" href="/women-in-business">
+              <CategoryWire post={post} path="/women-in-business" title="Women in Business" />
+            </Surface>
+          )}
+
           <Surface
-            title="Women in Business"
-            subtitle="/women-in-business"
-            href="/women-in-business"
+            title="Full article page"
+            subtitle={post.slug ? `/article/${post.slug}` : "—"}
+            href={post.slug ? `/article/${post.slug}` : undefined}
           >
-            <CategoryWire post={post} path="/women-in-business" title="Women in Business" />
+            <ArticleWire post={post} />
           </Surface>
-        )}
-
-        <Surface
-          title="Full article page"
-          subtitle={post.slug ? `/article/${post.slug}` : "—"}
-          href={post.slug ? `/article/${post.slug}` : undefined}
-        >
-          <ArticleWire post={post} />
-        </Surface>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

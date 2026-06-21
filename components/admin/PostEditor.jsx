@@ -66,9 +66,13 @@ export default function PostEditor({ taxonomy, post }) {
   const [rankingEntries, setRankingEntries] = useState(post?.ranking_entries || []);
   const [social, setSocial] = useState(post?.social_promotions || []);
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
 
-  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+  const set = (k, v) => {
+    setSaved(false);
+    setForm((f) => ({ ...f, [k]: v }));
+  };
   const toggle = (arr, setArr, id) =>
     setArr(arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id]);
 
@@ -117,8 +121,15 @@ export default function PostEditor({ taxonomy, post }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Save failed");
-      router.push("/admin");
-      router.refresh();
+      setSaving(false);
+      setSaved(true);
+      // Stay on the post instead of bouncing to the dashboard. For a brand-new
+      // post, move to its own editor URL so the user keeps editing / previewing.
+      if (!editing && data?.id) {
+        router.replace(`/admin/posts/${data.id}`);
+      } else {
+        router.refresh();
+      }
     } catch (e) {
       setError(e.message);
       setSaving(false);
@@ -171,6 +182,10 @@ export default function PostEditor({ taxonomy, post }) {
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-heading text-2xl text-[#1D1F26]">{editing ? "Edit Post" : "Add New Post"}</h1>
         <div className="flex items-center gap-2">
+          {saved && !saving && (
+            <span className="text-sm text-green-600 mr-1">Saved ✓</span>
+          )}
+          <a href="/admin" className="px-4 py-2 rounded-md text-sm border border-gray-300 bg-white hover:bg-gray-50">Dashboard</a>
           {editing && (
             <DeletePostButton
               id={post.id}
@@ -179,7 +194,7 @@ export default function PostEditor({ taxonomy, post }) {
             />
           )}
           {editing && form.send_to_newsletter && <NewsletterButton id={post.id} />}
-          <button onClick={() => save("draft")} disabled={saving} className="px-4 py-2 rounded-md text-sm border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-60">Save Draft</button>
+          <button onClick={() => save("draft")} disabled={saving} className="px-4 py-2 rounded-md text-sm border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-60">{saving ? "Saving…" : "Save Draft"}</button>
           <button onClick={() => save("published")} disabled={saving} className="px-4 py-2 rounded-md text-sm bg-primary text-white font-medium hover:opacity-90 disabled:opacity-60">{saving ? "Saving…" : "Publish"}</button>
         </div>
       </div>
