@@ -9,8 +9,8 @@ export default async function PanelLayout({ children }) {
 
   return (
     <div className="min-h-screen flex bg-[#FCF9F4]">
-      {/* SIDEBAR */}
-      <aside className="w-60 shrink-0 bg-[#1D1F26] text-white flex flex-col">
+      {/* SIDEBAR — pinned full-height so it stays put while content scrolls */}
+      <aside className="w-60 shrink-0 bg-[#1D1F26] text-white flex flex-col sticky top-0 h-screen">
         <div className="px-6 py-6 border-b border-white/10">
           <div className="font-heading text-xl leading-tight">The Success Digest</div>
           <div className="text-[11px] uppercase tracking-widest text-primary mt-1">CMS</div>
