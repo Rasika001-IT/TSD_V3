@@ -3,14 +3,22 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSessionUser } from '@/lib/supabase-server';
 import { slugify } from '@/lib/slug';
 
-// Trim env values — a trailing space/newline pasted into the host's env vars
-// makes the AWS SDK compute a bad signature ("signature does not match").
+// Clean env values: trim whitespace AND strip an accidentally pasted `NAME=`
+// prefix (e.g. a Railway value set to `R2_SECRET_ACCESS_KEY=abc…` instead of
+// `abc…`). Either mistake makes the AWS SDK compute a bad signature
+// ("the request signature we calculated does not match…").
+const envClean = (name) =>
+  (process.env[name] || '')
+    .trim()
+    .replace(new RegExp(`^${name}=`), '')
+    .trim();
+
 const r2 = new S3Client({
   region: 'auto',
-  endpoint: `https://${(process.env.R2_ACCOUNT_ID || '').trim()}.r2.cloudflarestorage.com`,
+  endpoint: `https://${envClean('R2_ACCOUNT_ID')}.r2.cloudflarestorage.com`,
   credentials: {
-    accessKeyId: (process.env.R2_ACCESS_KEY_ID || '').trim(),
-    secretAccessKey: (process.env.R2_SECRET_ACCESS_KEY || '').trim(),
+    accessKeyId: envClean('R2_ACCESS_KEY_ID'),
+    secretAccessKey: envClean('R2_SECRET_ACCESS_KEY'),
   },
 });
 
