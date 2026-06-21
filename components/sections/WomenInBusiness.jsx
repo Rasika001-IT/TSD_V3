@@ -167,7 +167,6 @@ const WomenInBusiness = ({
 
                       <SmartImage
                         src={
-                          post.image ||
                           WOMEN_IMAGES[
                             index %
                               WOMEN_IMAGES.length

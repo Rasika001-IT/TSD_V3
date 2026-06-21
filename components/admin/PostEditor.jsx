@@ -6,6 +6,7 @@ import RankingEntriesEditor from "./RankingEntriesEditor";
 import SocialCascadeEditor from "./SocialCascadeEditor";
 import DeletePostButton from "./DeletePostButton";
 import NewsletterButton from "./NewsletterButton";
+import FileDropzone from "./FileDropzone";
 
 const POST_TYPES = ["news", "blog", "ranking", "report", "feature"];
 const REPORT_TYPES = ["industry_report", "tsd_insights", "market_pulse", "whitepaper", "annual_outlook"];
@@ -70,28 +71,6 @@ export default function PostEditor({ taxonomy, post }) {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const toggle = (arr, setArr, id) =>
     setArr(arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id]);
-
-  const uploadFeatured = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-    const data = await res.json();
-    if (data.url) set("featured_image", data.url);
-    e.target.value = "";
-  };
-
-  const uploadPdf = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-    const data = await res.json();
-    if (data.url) set("pdf_url", data.url);
-    e.target.value = "";
-  };
 
   const csv = (s) => s.split(",").map((x) => x.trim()).filter(Boolean);
 
@@ -164,6 +143,26 @@ export default function PostEditor({ taxonomy, post }) {
     (c) => c.slug === "women-of-impact" || /women of impact/i.test(c.name || ""),
   );
   const inWomen = !!womenCat && categoryIds.includes(womenCat.id);
+
+  // #9 Only surface categories that actually map to a section on the public
+  // site (nav + landing-page sections); the stray taxonomy rows (AI, Deals,
+  // ESG, Global, Leadership Moves, Policy, Technology) are hidden. Grouped by
+  // parent so duplicate names (Crypto / Sports under both News and Blogs) are
+  // unambiguous.
+  const SITE_CATEGORY_SLUGS = new Set([
+    "news", "blogs", "featured-articles", "women-of-impact", "editors-highlights",
+    "breaking-news", "crypto", "industries", "markets", "regulations", "sports", "startups",
+    "crypto-blogs", "events", "explainers", "how-to", "lifestyle", "sports-blogs", "travel",
+  ]);
+  const siteCats = (taxonomy?.categories || []).filter((c) => SITE_CATEGORY_SLUGS.has(c.slug));
+  const newsParentId = siteCats.find((c) => c.slug === "news")?.id;
+  const blogsParentId = siteCats.find((c) => c.slug === "blogs")?.id;
+  const categoryGroups = [
+    { title: "Site sections", items: siteCats.filter((c) => !c.parent_id) },
+    { title: "News topics", items: siteCats.filter((c) => c.parent_id === newsParentId) },
+    { title: "Blog topics", items: siteCats.filter((c) => c.parent_id === blogsParentId) },
+  ].filter((g) => g.items.length);
+
   const previewLink =
     "inline-flex items-center justify-center gap-1 px-3 py-2 rounded-md text-sm border border-gray-300 bg-white hover:bg-gray-50";
 
@@ -251,6 +250,18 @@ export default function PostEditor({ taxonomy, post }) {
                 {inWomen ? " and Women in Business" : ""} section. Open it to preview where it lands.
               </p>
               <div className="flex flex-col gap-2">
+                {editing ? (
+                  <a
+                    href={`/admin/posts/${post.id}/preview`}
+                    className="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-md text-sm bg-primary text-white font-medium hover:opacity-90"
+                  >
+                    Open full preview map
+                  </a>
+                ) : (
+                  <p className="text-xs text-gray-400">
+                    Save the post once to open the full preview map.
+                  </p>
+                )}
                 <a href={section.href} target="_blank" rel="noreferrer" className={previewLink}>
                   Preview {section.label} ↗
                 </a>
@@ -278,10 +289,12 @@ export default function PostEditor({ taxonomy, post }) {
                 </select>
               </Field>
               <Field label="PDF">
-                {form.pdf_url && (
-                  <a href={form.pdf_url} target="_blank" rel="noreferrer" className="block text-xs text-primary underline mb-2 truncate">{form.pdf_url}</a>
-                )}
-                <input type="file" accept="application/pdf" onChange={uploadPdf} className="text-sm" />
+                <FileDropzone
+                  value={form.pdf_url}
+                  onChange={(url) => set("pdf_url", url)}
+                  accept="application/pdf"
+                  kind="file"
+                />
               </Field>
               <Field label="Page Count">
                 <input type="number" className={input} value={form.page_count} onChange={(e) => set("page_count", e.target.value)} />
@@ -295,8 +308,12 @@ export default function PostEditor({ taxonomy, post }) {
 
           <div className="bg-white border border-gray-200 rounded-xl p-4">
             <Field label="Featured Image">
-              {form.featured_image && <img src={form.featured_image} alt="" className="w-full h-32 object-cover rounded mb-2" />}
-              <input type="file" accept="image/*" onChange={uploadFeatured} className="text-sm" />
+              <FileDropzone
+                value={form.featured_image}
+                onChange={(url) => set("featured_image", url)}
+                accept="image/*"
+                kind="image"
+              />
             </Field>
             <Field label="Author">
               <select className={input} value={form.author_id} onChange={(e) => set("author_id", e.target.value)}>
@@ -319,12 +336,19 @@ export default function PostEditor({ taxonomy, post }) {
 
           <div className="bg-white border border-gray-200 rounded-xl p-4">
             <Field label="Categories">
-              <div className="max-h-40 overflow-y-auto space-y-1">
-                {taxonomy.categories.map((c) => (
-                  <label key={c.id} className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" checked={categoryIds.includes(c.id)} onChange={() => toggle(categoryIds, setCategoryIds, c.id)} />
-                    {c.name}
-                  </label>
+              <div className="max-h-60 overflow-y-auto space-y-3">
+                {categoryGroups.map((group) => (
+                  <div key={group.title}>
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 mb-1">{group.title}</p>
+                    <div className="space-y-1">
+                      {group.items.map((c) => (
+                        <label key={c.id} className="flex items-center gap-2 text-sm">
+                          <input type="checkbox" checked={categoryIds.includes(c.id)} onChange={() => toggle(categoryIds, setCategoryIds, c.id)} />
+                          {c.name}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </Field>
