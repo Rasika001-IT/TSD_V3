@@ -17,14 +17,14 @@ const MagazineSection = () => {
   const nextRef = useRef(null);
 
   const handleSubscribeClick = () => {
-    const newsletterSection =
-      document.getElementById("newsletter");
-
-    if (newsletterSection) {
-      newsletterSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+    const newsletterSection = document.getElementById("newsletter");
+    if (!newsletterSection) return;
+    // Lenis owns the scroll on the public site, so drive it through the shared
+    // instance; native scrollIntoView is a no-op while Lenis is active.
+    if (typeof window !== "undefined" && window.__lenis) {
+      window.__lenis.scrollTo(newsletterSection, { offset: -80 });
+    } else {
+      newsletterSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 

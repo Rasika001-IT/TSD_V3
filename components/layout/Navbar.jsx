@@ -95,24 +95,33 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [location]);
 
+  // Lenis owns the scroll on the public site, so native scrollIntoView() is a
+  // no-op. Drive it through the shared Lenis instance (window.__lenis), falling
+  // back to native behaviour if Lenis isn't mounted.
+  const scrollToNewsletter = () => {
+    const section = document.getElementById("newsletter");
+    if (!section) return false;
+    if (typeof window !== "undefined" && window.__lenis) {
+      window.__lenis.scrollTo(section, { offset: -80 });
+    } else {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+    return true;
+  };
+
   const handleSubscribeClick = () => {
     if (location === "/") {
-      const section = document.getElementById("newsletter");
-
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
-      }
-    } else {
-      navigate.push("/");
-
-      setTimeout(() => {
-        const section = document.getElementById("newsletter");
-
-        if (section) {
-          section.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 100);
+      scrollToNewsletter();
+      return;
     }
+    // Navigate home, then poll until the newsletter section has mounted
+    // (the previous fixed 100ms timeout fired before hydration finished).
+    navigate.push("/");
+    let tries = 0;
+    const iv = setInterval(() => {
+      tries += 1;
+      if (scrollToNewsletter() || tries > 40) clearInterval(iv);
+    }, 100);
   };
 
   const handleLogout = async () => {

@@ -97,7 +97,7 @@ const Blogs = ({
                     alt={stripHtml(
                       post.title
                     )}
-                    className="w-[312px] h-[156px] object-cover"
+                    className="w-full aspect-[2/1]"
                   />
 
                   {/* CONTENT */}

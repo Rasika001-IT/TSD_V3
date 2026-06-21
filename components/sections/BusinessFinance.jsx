@@ -65,7 +65,7 @@ const BusinessFinance = ({
               <SmartImage
                 src={mainPost.image}
                 alt={mainPost.title}
-                className="w-[870px] h-[435px] object-cover"
+                className="w-full aspect-[2/1]"
               />
 
               <h3
@@ -94,7 +94,7 @@ const BusinessFinance = ({
                     <SmartImage
                       src={post.image}
                       alt={post.title}
-                      className="w-[400px] h-[200px] object-cover"
+                      className="w-full aspect-[2/1]"
                     />
 
                     <p
@@ -126,7 +126,7 @@ const BusinessFinance = ({
                   <SmartImage
                     src={post.image}
                     alt={post.title}
-                    className="w-[400px] h-[200px] object-cover"
+                    className="w-full aspect-[2/1]"
                   />
 
                   <p

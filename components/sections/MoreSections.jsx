@@ -145,7 +145,7 @@ const MoreSections = ({
                       alt={stripHtml(
                         mainPost.title
                       )}
-                      className="w-[282px] h-[141px] object-cover mb-4"
+                      className="w-full aspect-[2/1] mb-4"
                     />
                   </Link>
 

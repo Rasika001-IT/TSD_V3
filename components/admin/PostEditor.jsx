@@ -96,6 +96,16 @@ export default function PostEditor({ taxonomy, post }) {
   const csv = (s) => s.split(",").map((x) => x.trim()).filter(Boolean);
 
   const save = async (status) => {
+    // #8 Image interlock: a news or blog post can't go live without a featured
+    // image (prevents the missing/placeholder-image problem on the cards).
+    if (
+      status === "published" &&
+      (form.post_type === "news" || form.post_type === "blog") &&
+      !form.featured_image
+    ) {
+      setError("A featured image is required to publish a news or blog post.");
+      return;
+    }
     setSaving(true);
     setError("");
     const payload = {
@@ -137,6 +147,25 @@ export default function PostEditor({ taxonomy, post }) {
   };
 
   const formats = FORMATS[form.post_type] || ["standard"];
+
+  // #7 Visual map: show a new editor exactly which public section a post will
+  // surface in (by type + category) and let them open that page to preview it.
+  const SECTION_BY_TYPE = {
+    news: { label: "News", href: "/news" },
+    blog: { label: "Blogs", href: "/blogs" },
+    feature: { label: "Featured Articles", href: "/featured" },
+    ranking: { label: "Article page", href: post?.slug ? `/article/${post.slug}` : "/" },
+    report: { label: "Reports / Article", href: post?.slug ? `/article/${post.slug}` : "/" },
+  };
+  const section = SECTION_BY_TYPE[form.post_type] || { label: "Article page", href: "/" };
+  // Admin category_ids are Supabase PKs (not the public-site wp_id), so resolve
+  // the "Women of Impact" category by name/slug from the taxonomy.
+  const womenCat = (taxonomy?.categories || []).find(
+    (c) => c.slug === "women-of-impact" || /women of impact/i.test(c.name || ""),
+  );
+  const inWomen = !!womenCat && categoryIds.includes(womenCat.id);
+  const previewLink =
+    "inline-flex items-center justify-center gap-1 px-3 py-2 rounded-md text-sm border border-gray-300 bg-white hover:bg-gray-50";
 
   return (
     <div className="p-8">
@@ -210,6 +239,32 @@ export default function PostEditor({ taxonomy, post }) {
             </Field>
             <Field label="Schedule (optional)">
               <input type="datetime-local" className={input} value={form.scheduled_at} onChange={(e) => set("scheduled_at", e.target.value)} />
+            </Field>
+          </div>
+
+          {/* #7 Where this post appears on the public site */}
+          <div className="bg-white border border-gray-200 rounded-xl p-4">
+            <Field label="Where this appears">
+              <p className="text-xs text-gray-500 mb-3">
+                Based on its type{inWomen ? " and category" : ""}, this post surfaces in the{" "}
+                <span className="font-medium text-gray-700">{section.label}</span>
+                {inWomen ? " and Women in Business" : ""} section. Open it to preview where it lands.
+              </p>
+              <div className="flex flex-col gap-2">
+                <a href={section.href} target="_blank" rel="noreferrer" className={previewLink}>
+                  Preview {section.label} ↗
+                </a>
+                {inWomen && (
+                  <a href="/women-in-business" target="_blank" rel="noreferrer" className={previewLink}>
+                    Preview Women in Business ↗
+                  </a>
+                )}
+                {editing && post?.slug && (
+                  <a href={`/article/${post.slug}`} target="_blank" rel="noreferrer" className={previewLink}>
+                    Preview this article ↗
+                  </a>
+                )}
+              </div>
             </Field>
           </div>
 

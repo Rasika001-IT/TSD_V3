@@ -1,6 +1,7 @@
 "use client";
 import Container from "../layout/Container";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const logo = "/assets/icons/logo-footer.png";
 
@@ -12,6 +13,36 @@ const li = "/assets/icons/linkedin.svg";
 const arrow = "/assets/icons/arrow-footer.svg";
 
 const Footer = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Lenis owns the scroll on the public site, so drive scrolling through the
+  // shared instance (window.__lenis). If we're not on the home page, navigate
+  // there first and poll until the newsletter section mounts.
+  const scrollToNewsletter = () => {
+    const section = document.getElementById("newsletter");
+    if (!section) return false;
+    if (typeof window !== "undefined" && window.__lenis) {
+      window.__lenis.scrollTo(section, { offset: -80 });
+    } else {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+    return true;
+  };
+
+  const handleSubscribeClick = () => {
+    if (pathname === "/") {
+      scrollToNewsletter();
+      return;
+    }
+    router.push("/");
+    let tries = 0;
+    const iv = setInterval(() => {
+      tries += 1;
+      if (scrollToNewsletter() || tries > 40) clearInterval(iv);
+    }, 100);
+  };
+
   return (
     <footer className="bg-[#0E1420] text-white pt-16">
 
@@ -84,7 +115,10 @@ const Footer = () => {
 
             </div>
 
-            <button className="bg-white text-black px-7 py-3 text-[14px] rounded-md font-medium w-fit mt-1">
+            <button
+              onClick={handleSubscribeClick}
+              className="bg-white text-black px-7 py-3 text-[14px] rounded-md font-medium w-fit mt-1"
+            >
               Subscribe
             </button>
 

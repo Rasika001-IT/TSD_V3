@@ -70,30 +70,32 @@ const MagazineReader = () => {
         </div>
 
         {/* VIEWER */}
-        <div className="max-w-6xl mx-auto bg-[#1E222B] p-10 rounded-lg flex justify-center relative">
-
-          <button className="absolute left-6 text-white text-2xl opacity-60 hover:opacity-100">
-            ‹
-          </button>
+        <div className="max-w-6xl mx-auto bg-[#1E222B] p-4 sm:p-8 lg:p-10 rounded-lg">
 
           {magazine.embedUrl ? (
-            <div className="relative w-[700px] h-[495px] max-w-full">
+            // Responsive FlipHTML5 embed — keeps the spread's aspect ratio on
+            // every screen instead of a fixed 700×495 box (matches the embed
+            // snippet FlipHTML5 provides).
+            <div
+              className="relative w-full h-0"
+              style={{ paddingTop: "max(60%, 324px)" }}
+            >
               <iframe
                 src={magazine.embedUrl}
                 title={magazine.title}
-                className="absolute w-full h-full border-none"
+                className="absolute left-0 top-0 w-full h-full border-none"
+                seamless="seamless"
+                scrolling="no"
+                frameBorder="0"
+                allowTransparency="true"
                 allowFullScreen
               />
             </div>
           ) : (
-            <div className="w-[350px] h-[495px] flex items-center justify-center bg-gray-700 text-white">
+            <div className="w-full h-[495px] flex items-center justify-center bg-gray-700 text-white rounded">
               Coming Soon
             </div>
           )}
-
-          <button className="absolute right-6 text-white text-2xl opacity-60 hover:opacity-100">
-            ›
-          </button>
         </div>
 
         {/* FEATURED ARTICLE */}
