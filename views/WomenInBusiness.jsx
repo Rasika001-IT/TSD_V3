@@ -10,28 +10,25 @@ import StoryRow from "../components/sections/women/StoryRow";
 
 // Server component: posts (Women of Impact, cat 135) are fetched on the server
 // (app/women-in-business/page.js) and rendered into the HTML — no loader.
-const WomenInBusiness = ({ posts = [], feature = null }) => {
-  const heroPost = posts[0];
-  const featuredPost = posts[1];
-  const storyPosts = posts.slice(2, 5);
+const WomenInBusiness = ({ posts = [], covers = null }) => {
+  // Landing image (curated portrait) per post, falling back to the article image.
+  const landingFor = (post) => covers?.byPost?.[post?.uuid] || post?.image;
 
-  // The hero is editor-controlled (active wib_feature); fall back to the first
-  // Women of Impact post if no feature is set.
-  const hero = feature
+  // Hero = the manually-marked article if set, else the most-recent one.
+  const heroPost =
+    (covers?.heroPostId && posts.find((p) => p.uuid === covers.heroPostId)) || posts[0];
+  const rest = posts.filter((p) => p.uuid !== heroPost?.uuid);
+  const featuredPost = rest[0];
+  const storyPosts = rest.slice(1, 4);
+
+  const hero = heroPost
     ? {
-        title: feature.title || "",
-        description: "",
-        image: feature.cover_image,
-        href: feature.article_url,
+        title: heroPost.title,
+        description: stripHtml(heroPost.excerpt),
+        image: landingFor(heroPost),
+        href: `/article/${heroPost.slug}`,
       }
-    : heroPost
-      ? {
-          title: heroPost.title,
-          description: stripHtml(heroPost.excerpt),
-          image: heroPost.image,
-          href: `/article/${heroPost.slug}`,
-        }
-      : null;
+    : null;
 
   return (
     <>
@@ -44,7 +41,7 @@ const WomenInBusiness = ({ posts = [], feature = null }) => {
           data={{
             title: featuredPost.title,
             description: stripHtml(featuredPost.excerpt),
-            image: featuredPost.image,
+            image: landingFor(featuredPost),
             slug: featuredPost.slug,
           }}
         />
@@ -55,7 +52,7 @@ const WomenInBusiness = ({ posts = [], feature = null }) => {
           key={story.id}
           title={story.title}
           description={stripHtml(story.excerpt)}
-          image={story.image}
+          image={landingFor(story)}
           slug={story.slug}
           reverse={index % 2 !== 0}
         />
