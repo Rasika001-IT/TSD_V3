@@ -10,27 +10,8 @@ import "swiper/css";
 
 import Container from "../layout/Container";
 
-// STATIC IMAGES
-const JeevantikaImg = "/assets/images/women/jeevantika.png";
-const KamiyaImg = "/assets/images/women/kamiya.png";
-const KristineImg = "/assets/images/women/kristin.png";
-const TiaImg = "/assets/images/women/tia.png";
-const ZarineImg = "/assets/images/women/zarine.png";
-
 const leftArrow = "/assets/icons/arrow-left.svg";
 const rightArrow = "/assets/icons/arrow-right.svg";
-
-const WOMEN_IMAGES = [
-  JeevantikaImg,
-  KamiyaImg,
-  TiaImg,
-  ZarineImg,
-  KristineImg,
-];
-
-const EXCLUDED_POST_ID = 4259;
-
-
 
 const truncateText = (
   text,
@@ -53,13 +34,8 @@ const WomenInBusiness = ({
   const nextRef = useRef(null);
 
   const womenPosts = posts
-    .filter(
-      (post) =>
-        post.categories.includes(
-          135
-        ) &&
-        post.id !==
-          EXCLUDED_POST_ID
+    .filter((post) =>
+      post.categories.includes(135)
     )
     .slice(0, 5);
 
@@ -176,7 +152,7 @@ const WomenInBusiness = ({
             }}
           >
             {womenPosts.map(
-              (post, index) => (
+              (post) => (
                 <SwiperSlide key={post.id}>
                   <Link
                     href={`/article/${post.slug}`}
@@ -184,12 +160,7 @@ const WomenInBusiness = ({
                     <div className="relative group cursor-pointer overflow-hidden">
 
                       <SmartImage
-                        src={
-                          WOMEN_IMAGES[
-                            index %
-                              WOMEN_IMAGES.length
-                          ]
-                        }
+                        src={post.image}
                         alt={stripHtml(
                           post.title
                         )}
