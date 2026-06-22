@@ -20,6 +20,7 @@ const ArticlePage = ({
   mustReadPosts = [],
   isFeaturedArticle = false,
   rankingEntries = [],
+  relatedMagazine = null,
 }) => {
   const [openFAQ, setOpenFAQ] = useState(null);
 
@@ -51,6 +52,7 @@ const ArticlePage = ({
         openFAQ={openFAQ}
         setOpenFAQ={setOpenFAQ}
         mustReadPosts={mustReadPosts}
+        relatedMagazine={relatedMagazine}
       />
     );
   }

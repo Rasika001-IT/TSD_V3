@@ -3,13 +3,12 @@ import Link from "next/link";
 
 import Loader from "../ui/Loader";
 
-import { magazines } from "../../data/magazines";
-
 const FeaturedArticleTemplate = ({
   post,
   taxonomyData,
   mustReadPosts,
   loading,
+  relatedMagazine = null,
 }) => {
   if (loading || !post) {
     return (
@@ -20,12 +19,8 @@ const FeaturedArticleTemplate = ({
   const cleanTitle =
     post.title.replace(/<[^>]+>/g, "");
 
-  // FIND MATCHING MAGAZINE
-  const matchingMagazine = magazines.find(
-    (magazine) =>
-      magazine.featured?.articleSlug ===
-      post.slug
-  );
+  // Magazine that features this post (from the DB, passed by the server).
+  const matchingMagazine = relatedMagazine;
 
   return (
     <section className="max-w-[1100px] mx-auto px-6 py-14">
@@ -113,8 +108,8 @@ const FeaturedArticleTemplate = ({
               className="inline-block group"
             >
               <img
-                src={matchingMagazine.image}
-                alt={matchingMagazine.title}
+                src={matchingMagazine.cover_image}
+                alt={matchingMagazine.edition_title || ""}
                 className="
                   mx-auto
                   w-[280px]
