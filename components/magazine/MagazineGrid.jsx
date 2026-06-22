@@ -2,9 +2,9 @@
 import Container from "../layout/Container";
 import Link from "next/link";
 import { useState } from "react";
-import { magazines } from "../../data/magazines";
 
-const MagazineGrid = () => {
+// `magazines` come from the CMS (Supabase) via the /magazine server component.
+const MagazineGrid = ({ magazines = [] }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 6;
@@ -45,15 +45,15 @@ const MagazineGrid = () => {
               <div className="group cursor-pointer w-full">
                 <div className="overflow-hidden rounded-md bg-[#252830]">
                   <img
-                    src={item.image}
-                    alt={item.title}
+                    src={item.cover_image}
+                    alt={item.edition_title || item.post?.title || ""}
                     className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
                   />
                 </div>
 
                 <h3 className="mt-3 sm:mt-5 px-1 font-heading font-semibold text-sm sm:text-lg lg:text-xl text-gray-200 leading-snug group-hover:text-primary transition-colors duration-300">
-                  {item.title}
+                  {item.edition_title || item.post?.title}
                 </h3>
               </div>
             </Link>

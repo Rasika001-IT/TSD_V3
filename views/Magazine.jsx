@@ -5,12 +5,12 @@ import MagazineGrid from "../components/magazine/MagazineGrid";
 import Newsletter from "../components/sections/Newsletter";
 import Footer from "../components/sections/Footer";
 
-const Magazine = () => {
+const Magazine = ({ magazines = [] }) => {
   return (
     <div className="bg-[#1D1F26] min-h-screen">
       <Navbar />
 
-      <MagazineGrid />
+      <MagazineGrid magazines={magazines} />
 
       <Newsletter />
       <Footer />

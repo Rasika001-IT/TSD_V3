@@ -15,7 +15,7 @@ import MagazineSection from "../components/MagazineSection";
 
 // Server component: data is fetched on the server (app/page.js) and passed in,
 // so the whole homepage is in the HTML on first paint — no loader, no client fetch.
-const Home = ({ posts = [], categories = [] }) => {
+const Home = ({ posts = [], categories = [], magazines = [], wibFeature = null }) => {
   return (
     <div className="bg-[#FCF9F4]">
       <Navbar />
@@ -29,9 +29,9 @@ const Home = ({ posts = [], categories = [] }) => {
         categories={categories}
       />
 
-      <MagazineSection />
+      <MagazineSection magazines={magazines} />
 
-      <WomenInBusiness posts={posts} />
+      <WomenInBusiness posts={posts} feature={wibFeature} />
 
       <BusinessFinance posts={posts} />
 

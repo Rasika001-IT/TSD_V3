@@ -1,44 +1,13 @@
-"use client";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { magazines } from "../data/magazines";
-import { fetchPostBySlug } from "../services/wordpress";
 
 import Navbar from "../components/layout/Navbar";
 import Newsletter from "../components/sections/Newsletter";
 import Footer from "../components/sections/Footer";
 
-const MagazineReader = () => {
-  const { slug } = useParams();
-
-  const [featuredPost, setFeaturedPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const magazine = magazines.find((m) => m.slug === slug);
-
-  useEffect(() => {
-    const loadFeatured = async () => {
-      if (!magazine?.featured?.articleSlug) return;
-
-      try {
-        setLoading(true);
-
-        const post = await fetchPostBySlug(
-          magazine.featured.articleSlug
-        );
-
-        setFeaturedPost(post);
-      } catch (err) {
-        console.error("Error fetching featured article:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (magazine) loadFeatured();
-  }, [slug]);
-
+// Server-fed: the magazine (+ its embedded featured post) is fetched in
+// app/magazine/[slug]/page.js. The flipbook comes from `fliphtml5_url`; the
+// cover-story block is auto-attached from the linked post.
+const MagazineReader = ({ magazine }) => {
   if (!magazine) {
     return (
       <>
@@ -51,6 +20,9 @@ const MagazineReader = () => {
     );
   }
 
+  const post = magazine.post;
+  const heading = magazine.edition_title || post?.title || "Read Here";
+
   return (
     <>
       <Navbar />
@@ -59,30 +31,20 @@ const MagazineReader = () => {
 
         {/* HEADER */}
         <div className="max-w-7xl mx-auto px-6 mb-10 flex justify-between items-center">
-          <h1 className="text-3xl font-serif">Read Here</h1>
+          <h1 className="text-3xl font-serif">{heading}</h1>
 
-          <Link
-            href="/magazine"
-            className="text-sm text-gray-600 hover:text-[#C89632]"
-          >
+          <Link href="/magazine" className="text-sm text-gray-600 hover:text-[#C89632]">
             ← Back to Magazines
           </Link>
         </div>
 
         {/* VIEWER */}
         <div className="max-w-6xl mx-auto bg-[#1E222B] p-4 sm:p-8 lg:p-10 rounded-lg">
-
-          {magazine.embedUrl ? (
-            // Responsive FlipHTML5 embed — keeps the spread's aspect ratio on
-            // every screen instead of a fixed 700×495 box (matches the embed
-            // snippet FlipHTML5 provides).
-            <div
-              className="relative w-full h-0"
-              style={{ paddingTop: "max(60%, 324px)" }}
-            >
+          {magazine.fliphtml5_url ? (
+            <div className="relative w-full h-0" style={{ paddingTop: "max(60%, 324px)" }}>
               <iframe
-                src={magazine.embedUrl}
-                title={magazine.title}
+                src={magazine.fliphtml5_url}
+                title={heading}
                 className="absolute left-0 top-0 w-full h-full border-none"
                 seamless="seamless"
                 scrolling="no"
@@ -98,48 +60,39 @@ const MagazineReader = () => {
           )}
         </div>
 
-        {/* FEATURED ARTICLE */}
-        {featuredPost && (
-  <Link href={`/article/${featuredPost.slug}`}>
-    <div className="max-w-6xl mx-auto mt-20 px-6 cursor-pointer group">
+        {/* FEATURED ARTICLE (cover story) — auto-attached from the linked post */}
+        {post && (
+          <Link href={`/article/${post.slug}`}>
+            <div className="max-w-6xl mx-auto mt-20 px-6 cursor-pointer group">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
 
-      <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="w-full h-[280px] bg-gray-100 flex items-center justify-center overflow-hidden rounded-md">
+                  <img
+                    src={post.featured_image}
+                    alt={post.title}
+                    className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
 
-        {/* IMAGE */}
-        <div className="w-[560px] h-[280px] bg-gray-100 flex items-center justify-center overflow-hidden rounded-md">
-  <img
-    src={featuredPost.image}
-    alt={featuredPost.title}
-    className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105"
-  />
-</div>
+                <div>
+                  <span className="text-[#C89632] text-xs uppercase tracking-wide">Cover Story</span>
 
-        {/* CONTENT */}
-        <div>
-          <span className="text-[#C89632] text-xs uppercase tracking-wide">
-            Cover Story
-          </span>
+                  <h2 className="text-3xl font-serif mt-3 group-hover:text-[#C89632] transition-colors">
+                    {post.title}
+                  </h2>
 
-          <h2 className="text-3xl font-serif mt-3 group-hover:text-[#C89632] transition-colors">
-            {featuredPost.title}
-          </h2>
+                  <div
+                    className="mt-4 text-gray-600 line-clamp-4"
+                    dangerouslySetInnerHTML={{ __html: post.excerpt || "" }}
+                  />
 
-          <div
-  className="mt-4 text-gray-600 line-clamp-4"
-  dangerouslySetInnerHTML={{ __html: featuredPost.excerpt }}
-/>
+                  <p className="mt-6 text-[#C89632] font-medium">Read Full Story →</p>
+                </div>
 
-          {/* Now just visual, not a link */}
-          <p className="mt-6 text-[#C89632] font-medium">
-            Read Full Story →
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-  </Link>
-)}
+              </div>
+            </div>
+          </Link>
+        )}
 
       </div>
 

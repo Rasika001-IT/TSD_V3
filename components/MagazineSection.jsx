@@ -7,12 +7,11 @@ import { useRef } from "react";
 
 import Container from "./layout/Container";
 
-import { magazines } from "../data/magazines";
-
 const leftArrow = "/assets/icons/arrow-left.svg";
 const rightArrow = "/assets/icons/arrow-right.svg";
 
-const MagazineSection = () => {
+// `magazines` come from the CMS (Supabase) via the homepage server component.
+const MagazineSection = ({ magazines = [] }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -128,8 +127,8 @@ const MagazineSection = () => {
                   {/* COVER */}
                   <div className="overflow-hidden">
                     <img
-                      src={item.image}
-                      alt={item.title}
+                      src={item.cover_image}
+                      alt={item.edition_title || item.post?.title || ""}
                       className="
                         w-[290px] h-[375px]
                         aspect-[291/372]
@@ -152,7 +151,7 @@ const MagazineSection = () => {
                       transition-colors
                     "
                   >
-                    {item.title}
+                    {item.edition_title || item.post?.title}
                   </h3>
 
                 </div>

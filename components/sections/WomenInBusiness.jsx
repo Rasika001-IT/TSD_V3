@@ -47,6 +47,7 @@ const truncateText = (
 
 const WomenInBusiness = ({
   posts = [],
+  feature = null,
 }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
@@ -62,13 +63,9 @@ const WomenInBusiness = ({
     )
     .slice(0, 5);
 
-  if (!womenPosts.length) {
-    console.log(
-      "No Women of Impact posts found."
-    );
-
-    return null;
-  }
+  // Render the section if there's either the editor-controlled feature hero or
+  // individual Women of Impact posts to show.
+  if (!womenPosts.length && !feature) return null;
 
   return (
     <section className="bg-[#C89632]/5 py-24 overflow-hidden">
@@ -90,6 +87,27 @@ const WomenInBusiness = ({
 
           <div className="w-16 h-[2px] bg-[#C89632] mx-auto mt-4"></div>
         </div>
+
+        {/* EDITOR-CONTROLLED FEATURE HERO — clicks through to the chosen article */}
+        {feature && (
+          <a
+            href={feature.article_url}
+            className="block relative max-w-5xl mx-auto mb-14 rounded-lg overflow-hidden group"
+          >
+            <SmartImage
+              src={feature.cover_image}
+              alt={feature.title || "Women in Business feature"}
+              className="w-full aspect-[16/7]"
+            />
+            {feature.title && (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6 sm:p-8">
+                <h3 className="font-heading text-white text-2xl sm:text-3xl md:text-4xl font-bold max-w-2xl group-hover:text-[#C89632] transition-colors">
+                  {feature.title}
+                </h3>
+              </div>
+            )}
+          </a>
+        )}
 
         {/* CAROUSEL */}
         <div className="relative px-8">
