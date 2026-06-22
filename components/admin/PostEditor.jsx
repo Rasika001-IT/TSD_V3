@@ -29,7 +29,7 @@ const Field = ({ label, children }) => (
 );
 const input = "w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40";
 
-export default function PostEditor({ taxonomy, post }) {
+export default function PostEditor({ taxonomy, post, preselectCategorySlug = null }) {
   const router = useRouter();
   const editing = !!post?.id;
 
@@ -61,7 +61,14 @@ export default function PostEditor({ taxonomy, post }) {
     pdf_url: post?.pdf_url || "",
     send_to_newsletter: post?.send_to_newsletter || false,
   });
-  const [categoryIds, setCategoryIds] = useState(post?.category_ids || []);
+  // New posts can pre-select a category (e.g. "+ Add Article" from the WiB tab).
+  const preselectId =
+    !post && preselectCategorySlug
+      ? (taxonomy?.categories || []).find((c) => c.slug === preselectCategorySlug)?.id
+      : null;
+  const [categoryIds, setCategoryIds] = useState(
+    post?.category_ids || (preselectId ? [preselectId] : []),
+  );
   const [tagIds, setTagIds] = useState(post?.tag_ids || []);
   const [rankingEntries, setRankingEntries] = useState(post?.ranking_entries || []);
   const [social, setSocial] = useState(post?.social_promotions || []);

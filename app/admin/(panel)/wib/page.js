@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getAdminWibArticles } from '@/lib/wib';
 import WibArticleRow from '@/components/admin/WibArticleRow';
 
@@ -9,7 +10,15 @@ export default async function WibAdmin() {
 
   return (
     <div className="p-8">
-      <h1 className="font-heading text-2xl text-[#1D1F26] mb-2">Women in Business</h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="font-heading text-2xl text-[#1D1F26]">Women in Business</h1>
+        <Link
+          href="/admin/posts/new?type=women"
+          className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:opacity-90"
+        >
+          + Add Article
+        </Link>
+      </div>
       <p className="text-sm text-gray-500 mb-6">
         All Women of Impact articles. Give each a <strong>landing image</strong> (the curated
         portrait used on the homepage carousel and the /women-in-business hero) — separate from the
