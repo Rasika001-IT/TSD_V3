@@ -37,7 +37,7 @@ const WomenInBusiness = ({
     .filter((post) =>
       post.categories.includes(135)
     )
-    .slice(0, 5);
+    .slice(0, 12);
 
   if (!womenPosts.length) return null;
 
@@ -72,6 +72,7 @@ const WomenInBusiness = ({
           {/* LEFT */}
           <button
             ref={prevRef}
+            aria-label="Previous"
             className="
               absolute
               left-0
@@ -80,9 +81,9 @@ const WomenInBusiness = ({
               z-10
             "
           >
-            <SmartImage
+            <img
               src={leftArrow}
-              alt="Previous"
+              alt=""
               className="w-7 h-7 opacity-60 hover:opacity-100 transition"
             />
           </button>
@@ -90,6 +91,7 @@ const WomenInBusiness = ({
           {/* RIGHT */}
           <button
             ref={nextRef}
+            aria-label="Next"
             className="
               absolute
               right-0
@@ -98,9 +100,9 @@ const WomenInBusiness = ({
               z-10
             "
           >
-            <SmartImage
+            <img
               src={rightArrow}
-              alt="Next"
+              alt=""
               className="w-7 h-7 opacity-60 hover:opacity-100 transition"
             />
           </button>
