@@ -28,6 +28,7 @@ export default function MagazineEditor({ magazine }) {
   const [fliphtml5, setFliphtml5] = useState(magazine?.fliphtml5_url || "");
   const [editionTitle, setEditionTitle] = useState(magazine?.edition_title || "");
   const [cover, setCover] = useState(magazine?.cover_image || "");
+  const [podcastAudio, setPodcastAudio] = useState(magazine?.podcast_audio || "");
   const [postUrl, setPostUrl] = useState(embedded?.slug ? `/article/${embedded.slug}` : "");
   const [post, setPost] = useState(
     embedded
@@ -81,6 +82,7 @@ export default function MagazineEditor({ magazine }) {
       fliphtml5_url: fliphtml5.trim(),
       post_id: post?.uuid || null,
       cover_image: cover || null,
+      podcast_audio: podcastAudio.trim() || null,
       edition_title: editionTitle.trim() || null,
       status,
     };
@@ -194,6 +196,21 @@ export default function MagazineEditor({ magazine }) {
         <div>
           <label className={label}>Cover image (magazine card / grid / header)</label>
           <FileDropzone value={cover} onChange={setCover} accept="image/*" kind="image" />
+        </div>
+
+        <div>
+          <label className={label}>Audio podcast (optional — upload an MP3 or paste a link)</label>
+          <FileDropzone value={podcastAudio} onChange={setPodcastAudio} accept="audio/*" kind="file" />
+          <input
+            className={`${input} mt-2`}
+            placeholder="…or paste an audio URL (https://…/podcast.mp3)"
+            value={podcastAudio}
+            onChange={(e) => setPodcastAudio(e.target.value)}
+          />
+          {podcastAudio && (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <audio controls src={podcastAudio} className="mt-3 w-full" />
+          )}
         </div>
 
         <div>

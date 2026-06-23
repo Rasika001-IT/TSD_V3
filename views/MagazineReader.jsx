@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "../components/layout/Navbar";
 import Newsletter from "../components/sections/Newsletter";
 import Footer from "../components/sections/Footer";
+import PodcastCard from "../components/magazine/PodcastCard";
 
 // Server-fed: the magazine (+ its embedded featured post) is fetched in
 // app/magazine/[slug]/page.js. The flipbook comes from `fliphtml5_url`; the
@@ -93,6 +94,9 @@ const MagazineReader = ({ magazine }) => {
             </div>
           </Link>
         )}
+
+        {/* AUDIO PODCAST — themed card, shown only when the edition has audio */}
+        <PodcastCard src={magazine.podcast_audio} title={heading} />
 
       </div>
 

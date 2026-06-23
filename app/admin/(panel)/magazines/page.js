@@ -1,23 +1,29 @@
 import Link from 'next/link';
-import { getAdminMagazines } from '@/lib/magazines';
+import { getAdminMagazines, MAGAZINE_SORTS } from '@/lib/magazines';
+import MagazineSortSelect from '@/components/admin/MagazineSortSelect';
 
 export const dynamic = 'force-dynamic';
 
-export default async function MagazinesAdmin() {
-  const magazines = await getAdminMagazines();
+export default async function MagazinesAdmin({ searchParams }) {
+  const sp = (await searchParams) || {};
+  const sort = MAGAZINE_SORTS[sp.sort] ? sp.sort : 'recent';
+  const magazines = await getAdminMagazines(sort);
   return (
     <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-end justify-between mb-6">
         <div>
           <h1 className="font-heading text-2xl text-[#1D1F26]">Magazines</h1>
           <p className="text-sm text-gray-500">{magazines.length} editions</p>
         </div>
-        <Link
-          href="/admin/magazines/new"
-          className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:opacity-90"
-        >
-          + New Magazine
-        </Link>
+        <div className="flex items-center gap-4">
+          <MagazineSortSelect sorts={MAGAZINE_SORTS} sort={sort} />
+          <Link
+            href="/admin/magazines/new"
+            className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:opacity-90"
+          >
+            + New Magazine
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
