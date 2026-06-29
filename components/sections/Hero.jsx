@@ -1,7 +1,7 @@
 "use client";
 import Container from "../layout/Container";
 import Link from "next/link";
-const heroImage = "/assets/images/women/page/George_P_HeroSection.png=";
+const heroImage = "/assets/images/George_P_HeroSection.png=";
 
 const Hero = () => {
   return (
