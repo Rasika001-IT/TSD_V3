@@ -1,7 +1,7 @@
 "use client";
 import Container from "../layout/Container";
 import Link from "next/link";
-const heroImage = "/assets/images/women/page/jeevantika1.png";
+const heroImage = "/assets/images/women/page/George_P_HeroSection.png=";
 
 const Hero = () => {
   return (
@@ -21,15 +21,13 @@ const Hero = () => {
             <h1 className="font-heading text-[42px] lg:text-[56px] leading-[1.1] mt-6">
               The Future of <br />
               <span className="text-[#C89632]">
-                Business Leadership
+                Whole-Person Recovery
               </span>
             </h1>
 
             {/* DESCRIPTION */}
             <p className="mt-6 text-[15px] text-black/70 max-w-lg leading-relaxed">
-              Discover how visionary leaders are reshaping industries and
-              creating sustainable growth in an ever-evolving global
-              marketplace.
+              Discover how George Patriki is reshaping addiction and mental health care through lived experience, clinical depth, and global education.
             </p>
 
             {/* BUTTONS */}
@@ -69,12 +67,12 @@ const Hero = () => {
               </p>
 
               <p className="text-[15px] leading-snug mb-4 text-black">
-                “Jeevantika Lingalwar: Redefining Access in the Age of AI.”
+                George Patriki: Turning Pain Into Hope in the Fight Against Addiction
               </p>
 
               <p className="text-[13px] text-[#C89632] leading-snug">
-                Head of Business Applications <br />
-                HCS
+                Clinical Director <br />
+                Dual Diagnosis Consultant
               </p>
 
             </div>
