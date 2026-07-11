@@ -33,7 +33,7 @@ const Hero = () => {
             {/* BUTTONS */}
             <div className="mt-8 flex flex-row items-center gap-3 flex-wrap">
 
-              <Link href="/article/george-patriki-turning-pain-into-purpose-in-the-fight-against-addiction">
+              <Link href="https://thesuccessdigest.org/article/charles-tyler-an-anatomy-of-an-elite-polymath">
                 <button className="bg-black text-white px-5 py-3 text-[13px] rounded-md hover:bg-black/80 transition">
                   Read full story →
                 </button>
