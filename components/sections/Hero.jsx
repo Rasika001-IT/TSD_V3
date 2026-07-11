@@ -1,7 +1,7 @@
 "use client";
 import Container from "../layout/Container";
 import Link from "next/link";
-const heroImage = "/assets/images/George_P_HeroSection.png";
+const heroImage = "/assets/images/Charles_LandingPage.png";
 
 const Hero = () => {
   return (
@@ -19,15 +19,15 @@ const Hero = () => {
 
             {/* HEADING */}
             <h1 className="font-heading text-[42px] lg:text-[56px] leading-[1.1] mt-6">
-              The Future of <br />
+              The Architecture of <br />
               <span className="text-[#C89632]">
-                Whole-Person Recovery
+                Trust
               </span>
             </h1>
 
             {/* DESCRIPTION */}
             <p className="mt-6 text-[15px] text-black/70 max-w-lg leading-relaxed">
-              Discover how George Patriki is reshaping addiction and mental health care through lived experience, clinical depth, and global education.
+              Discover how one educator turned personal loss into a framework that is redefining trust across blockchain, AI, and modern leadership.
             </p>
 
             {/* BUTTONS */}
@@ -67,12 +67,12 @@ const Hero = () => {
               </p>
 
               <p className="text-[15px] leading-snug mb-4 text-black">
-                George Patriki: Turning Pain Into Hope in the Fight Against Addiction
+                Charles E. Tyler: The Currency We Don't Print — Building Trust in a World That Moves Too Fast
               </p>
 
               <p className="text-[13px] text-[#C89632] leading-snug">
-                Clinical Director <br />
-                Dual Diagnosis Consultant
+                Educator · Executive Leader · Trust Architect <br />
+                Creator of the 8 Pillars of Trust for Blockchain & Crypto™
               </p>
 
             </div>
